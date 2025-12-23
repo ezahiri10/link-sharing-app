@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { router, publicProcedure } from './trpc.js'
-import { auth } from '../auth/better-auth'
+import { auth } from '../auth/better-auth.js'
 
 export const authRouter = router({
   register: publicProcedure
@@ -8,14 +8,17 @@ export const authRouter = router({
       z.object({
         email: z.string().email(),
         password: z.string().min(6),
+        name: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       return auth.api.signUpEmail({
-        email: input.email,
-        password: input.password,
-        req: ctx.req,
-        res: ctx.res,
+        body: {
+          email: input.email,
+          password: input.password,
+          name: input.name || input.email.split('@')[0],
+        },
+        headers: ctx.req.headers,
       })
     }),
 
@@ -28,17 +31,17 @@ export const authRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       return auth.api.signInEmail({
-        email: input.email,
-        password: input.password,
-        req: ctx.req,
-        res: ctx.res,
+        body: {
+          email: input.email,
+          password: input.password,
+        },
+        headers: ctx.req.headers,
       })
     }),
 
   logout: publicProcedure.mutation(async ({ ctx }) => {
     return auth.api.signOut({
-      req: ctx.req,
-      res: ctx.res,
+      headers: ctx.req.headers,
     })
   }),
 })
