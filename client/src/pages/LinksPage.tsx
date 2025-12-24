@@ -65,355 +65,312 @@ export default function LinksPage() {
     }
   }
 
-  const hasLinks = links.length > 0
-  const showSaveButton = showForm || hasLinks
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile Header - Fixed */}
-      <header className="bg-white md:hidden border-b w-full fixed top-0 left-0 right-0 z-50">
-        <div className="px-4 py-4 flex justify-between items-center">
-          <Link to="/dashboard/links">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#633CFF"/>
-              <path d="M11.048 18.86a3.751 3.751 0 0 1 0-5.306l1.863-1.862a.75.75 0 0 1 1.061 1.06l-1.863 1.863a2.25 2.25 0 0 0 3.182 3.182l1.862-1.862a.75.75 0 1 1 1.061 1.06l-1.862 1.863a3.756 3.756 0 0 1-5.304 0Zm9.793-7.72a3.756 3.756 0 0 0-5.304 0l-1.863 1.862a.75.75 0 0 0 1.061 1.06l1.863-1.862a2.25 2.25 0 0 1 3.182 3.182l-1.862 1.862a.75.75 0 1 0 1.06 1.06l1.863-1.862a3.756 3.756 0 0 0 0-5.303Z" fill="#FFF"/>
-            </svg>
-          </Link>
+    <div className="min-h-screen bg-[#FAFAFA]">
 
-          <div className="flex gap-2">
-            <Link 
-              to="/dashboard/links"
-              className="p-2.5 bg-purple-50 rounded-lg"
-            >
-              <svg width="20" height="20" fill="#633CFF" viewBox="0 0 16 16">
-                <path d="M8.523 11.72a.75.75 0 0 1 0 1.06l-.371.371A3.751 3.751 0 1 1 2.847 7.84l1.263-1.262a.75.75 0 0 1 1.06 1.06L3.908 8.9a2.25 2.25 0 0 0 3.183 3.183l.37-.371a.75.75 0 0 1 1.062 0Zm4.63-8.874a3.756 3.756 0 0 0-5.305 0l-.371.37A.75.75 0 1 0 8.538 4.28l.37-.37a2.25 2.25 0 0 1 3.184 3.182l-1.263 1.263a.75.75 0 0 0 1.06 1.06l1.263-1.262a3.756 3.756 0 0 0 0-5.307Z"/>
-              </svg>
-            </Link>
-            <Link 
-              to="/dashboard/profile"
-              className="p-2.5 rounded-lg hover:bg-purple-50"
-            >
-              <svg width="20" height="20" fill="#737373" viewBox="0 0 16 16">
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-              </svg>
-            </Link>
-          </div>
+      {/* ================= HEADER ================= */}
+      <header className="bg-white border-b border-[#E2E2E2]">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
-          <button 
-            onClick={() => user?.id && window.open(`/preview/${user.id}`, '_blank')}
-            className="border border-purple-600 text-purple-600 p-2.5 rounded-lg hover:bg-purple-50"
-          >
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-          </button>
-        </div>
-      </header>
-
-      {/* Desktop Header - Fixed */}
-      <header className="bg-white hidden md:block border-b w-full fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <img 
-              src="/assets/images/logo-devlinks-large.svg" 
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <img
+              src="/assets/images/logo-devlinks-small.svg"
               alt="devlinks"
-              className="h-8"
+              className="w-8 h-8"
             />
-
-            <div className="flex gap-1">
-              <Link 
-                to="/dashboard/links"
-                className="flex items-center gap-2 px-6 py-3 text-purple-600 bg-purple-50 rounded-lg font-semibold text-sm"
-              >
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M8.523 11.72a.75.75 0 0 1 0 1.06l-.371.371A3.751 3.751 0 1 1 2.847 7.84l1.263-1.262a.75.75 0 0 1 1.06 1.06L3.908 8.9a2.25 2.25 0 0 0 3.183 3.183l.37-.371a.75.75 0 0 1 1.062 0Zm4.63-8.874a3.756 3.756 0 0 0-5.305 0l-.371.37A.75.75 0 1 0 8.538 4.28l.37-.37a2.25 2.25 0 0 1 3.184 3.182l-1.263 1.263a.75.75 0 0 0 1.06 1.06l1.263-1.262a3.756 3.756 0 0 0 0-5.307Z"/>
-                </svg>
-                Links
-              </Link>
-              <Link 
-                to="/dashboard/profile"
-                className="flex items-center gap-2 px-6 py-3 text-gray-600 hover:text-purple-600 rounded-lg font-semibold text-sm"
-              >
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-                </svg>
-                Profile Details
-              </Link>
-            </div>
-
-            <button 
-              onClick={() => user?.id && window.open(`/preview/${user.id}`, '_blank')}
-              className="border border-purple-600 text-purple-600 px-6 py-3 rounded-lg text-sm font-semibold hover:bg-purple-50"
-            >
-              Preview
-            </button>
+            <span className="hidden sm:inline font-semibold text-lg">
+              devlinks
+            </span>
           </div>
+
+          {/* Navigation */}
+          <nav className="flex gap-2">
+            {/* Links (active) */}
+            <Link
+              to="/dashboard/links"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#EFEBFF] text-[#633CFF]"
+            >
+              <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                <path d="M11.154 14.65a.936.936 0 0 1 0 1.329l-.464.464a4.689 4.689 0 1 1-6.631-6.631l1.579-1.578a.938.938 0 0 1 1.327 1.327l-1.579 1.579a2.813 2.813 0 0 0 3.978 3.978l.463-.463a.936.936 0 0 1 1.327 0ZM16.346 3.05a4.695 4.695 0 0 0-6.631 0l-.464.463a.936.936 0 1 0 1.327 1.327l.464-.463a2.813 2.813 0 0 1 3.978 3.978l-1.579 1.579a.938.938 0 0 0 1.327 1.327l1.579-1.579a4.695 4.695 0 0 0 0-6.631Z" fill="currentColor"/>
+              </svg>
+              <span className="hidden sm:inline text-sm font-semibold">
+                Links
+              </span>
+            </Link>
+
+            {/* Profile */}
+            <Link
+              to="/dashboard/profile"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#737373] hover:bg-gray-100"
+            >
+              <svg width="21" height="20" viewBox="0 0 21 20" fill="none">
+                <path d="M10.5 1.563A8.437 8.437 0 1 0 18.938 10 8.447 8.447 0 0 0 10.5 1.562ZM6.716 15.357a4.688 4.688 0 0 1 7.568 0 6.54 6.54 0 0 1-7.568 0Zm1.596-5.982a2.188 2.188 0 1 1 4.376 0 2.188 2.188 0 0 1-4.376 0Zm7.344 4.683a6.523 6.523 0 0 0-2.265-1.83 4.062 4.062 0 1 0-5.782 0 6.522 6.522 0 0 0-2.265 1.83 6.562 6.562 0 1 1 10.304 0h.008Z" fill="currentColor"/>
+              </svg>
+              <span className="hidden sm:inline text-sm">
+                Profile Details
+              </span>
+            </Link>
+          </nav>
+
+          {/* Preview */}
+          <button
+            onClick={() => user?.id && window.open(`/preview/${user.id}`, '_blank')}
+            className="flex items-center gap-2 border border-[#633CFF] text-[#633CFF] px-4 py-2 rounded-lg hover:bg-[#EFEBFF]"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M19.61 9.62c-.03-.064-.714-1.583-2.225-3.095-2.023-2.02-4.572-3.088-7.385-3.088-2.812 0-5.362 1.068-7.382 3.088C1.106 8.037.422 9.556.391 9.62a.944.944 0 0 0 0 .761c.029.064.713 1.583 2.226 3.095 2.021 2.02 4.57 3.086 7.383 3.086 2.813 0 5.362-1.067 7.381-3.086 1.513-1.512 2.197-3.03 2.226-3.095a.946.946 0 0 0 .003-.761Zm-3.599 2.578c-1.677 1.651-3.7 2.49-6.01 2.49-2.313 0-4.334-.839-6.01-2.491A10.185 10.185 0 0 1 2.307 10a10.192 10.192 0 0 1 1.686-2.196C5.667 6.15 7.688 5.312 10 5.312s4.333.839 6.009 2.492c.659.652 1.226 1.39 1.685 2.196a10.19 10.19 0 0 1-1.685 2.197h.002Z" fill="currentColor"/>
+              <path d="M10 6.875A3.13 3.13 0 0 0 6.875 10 3.13 3.13 0 0 0 10 13.125 3.13 3.13 0 0 0 13.125 10 3.13 3.13 0 0 0 10 6.875Zm0 4.375c-.69 0-1.25-.56-1.25-1.25S9.31 8.75 10 8.75s1.25.56 1.25 1.25-.56 1.25-1.25 1.25Z" fill="currentColor"/>
+            </svg>
+            <span className="hidden sm:inline text-sm font-semibold">
+              Preview
+            </span>
+          </button>
+
         </div>
       </header>
 
-      {/* Main - Mobile: full width, Desktop: max-width with padding */}
-      <main className="pt-20 md:pt-24 pb-20 md:pb-0">
-        <div className="md:max-w-7xl md:mx-auto md:px-6 md:py-6">
-          <div className="md:grid md:grid-cols-[308px_1fr] md:gap-6">
-            
-            {/* Phone Preview (Desktop only) */}
-            <div className="hidden md:flex justify-center items-start">
-              <div className="bg-white rounded-xl p-6 w-full flex justify-center sticky top-28">
-                <div className="relative">
-                  <img 
-                    src="/assets/images/illustration-phone-mockup.svg" 
-                    alt="Phone mockup"
-                    className="w-[307px] h-[631px]"
-                  />
-                  
-                  {/* Content overlay */}
-                  <div className="absolute top-[60px] left-[35px] right-[35px] bottom-[60px] flex flex-col items-center pt-12">
-                    <div className="w-24 h-24 rounded-full bg-gray-200 mb-6 border-4 border-purple-600"></div>
-                    <div className="w-40 h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="w-20 h-2 bg-gray-200 rounded mb-14"></div>
-                    
-                    {/* Preview links */}
-                    <div className="space-y-5 w-full">
-                      {links.slice(0, 5).map((link) => {
-                        const platformInfo = getPlatformInfo(link.platform)
-                        return (
-                          <div
-                            key={link.id}
-                            style={{ backgroundColor: platformInfo.color }}
-                            className="rounded-lg p-4 flex items-center justify-between text-white shadow-sm"
-                          >
-                            <div className="flex items-center gap-2 min-w-0">
-                              {platformInfo.icon && (
-                                <img 
-                                  src={platformInfo.icon} 
-                                  alt="" 
-                                  className="w-4 h-4 flex-shrink-0 brightness-0 invert" 
-                                />
-                              )}
-                              <span className="text-xs font-medium truncate">
-                                {platformInfo.label}
-                              </span>
-                            </div>
-                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
+      {/* ================= MAIN ================= */}
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8">
+
+          {/* PHONE PREVIEW (DESKTOP ONLY) */}
+          <div className="hidden lg:flex justify-center items-start">
+            <div className="bg-white rounded-xl p-6">
+              <div className="relative">
+                <img
+                  src="/assets/images/illustration-phone-mockup.svg"
+                  alt="phone preview"
+                  className="w-[307px] h-[631px]"
+                />
+                
+                {/* Content overlay - only for dynamic links */}
+                <div className="absolute top-[278px] left-[35px] right-[35px] space-y-5">
+                  {links.slice(0, 5).map((link) => {
+                    const platformInfo = getPlatformInfo(link.platform)
+                    return (
+                      <div
+                        key={link.id}
+                        style={{ backgroundColor: platformInfo.color }}
+                        className="rounded-lg p-4 flex items-center justify-between text-white h-[44px]"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          {platformInfo.icon && (
+                            <img 
+                              src={platformInfo.icon} 
+                              alt="" 
+                              className="w-4 h-4 flex-shrink-0 brightness-0 invert" 
+                            />
+                          )}
+                          <span className="text-xs font-medium truncate">
+                            {platformInfo.label}
+                          </span>
+                        </div>
+                        <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 16 16" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 3l5 5-5 5" />
+                        </svg>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Links Editor - Mobile: no padding/margin, Desktop: card with padding */}
-            <div className="bg-white md:rounded-xl md:p-10 min-h-[calc(100vh-160px)] md:min-h-[calc(100vh-200px)]">
-              
-              {/* Header Section */}
-              <div className="p-6 md:p-0 md:pb-10 md:mb-6 md:border-b md:border-gray-100">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                  Customize your links
-                </h1>
-                <p className="text-sm md:text-base text-gray-600">
-                  Add/edit/remove links below and then share all your profiles with the world!
-                </p>
-              </div>
+          {/* LINKS EDITOR */}
+          <div className="bg-white rounded-xl p-6 space-y-6">
 
-              <div className="px-6 md:px-0">
-                {/* Add link button */}
-                <button
-                  onClick={() => setShowForm(true)}
-                  disabled={showForm}
-                  className="w-full border-2 border-purple-600 text-purple-600 py-3 rounded-lg text-sm md:text-base font-semibold hover:bg-purple-50 transition disabled:opacity-50 mb-6"
-                >
-                  + Add new link
-                </button>
+            {/* Title */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Customize your links
+              </h1>
+              <p className="text-sm text-[#737373] mt-1">
+                Add/edit/remove links below and then share all your profiles with the world!
+              </p>
+            </div>
 
-                {/* Add link form */}
-                {showForm && (
-                  <div className="bg-gray-50 rounded-xl p-5 mb-6">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-gray-700 font-bold flex items-center gap-2">
-                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
-                          <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
-                        </svg>
-                        Link #{links.length + 1}
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowForm(false)
-                          setPlatform('')
-                          setUrl('')
+            {/* Add new link */}
+            <button
+              onClick={() => setShowForm(true)}
+              disabled={showForm}
+              className="w-full border border-[#633CFF] text-[#633CFF] py-3 rounded-lg text-sm font-semibold hover:bg-[#EFEBFF] transition disabled:opacity-50"
+            >
+              + Add new link
+            </button>
+
+            {/* Add link form */}
+            {showForm && (
+              <div className="bg-[#FAFAFA] rounded-xl p-5 space-y-3">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-gray-700 font-bold flex items-center gap-2">
+                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
+                      <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    Link #{links.length + 1}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false)
+                      setPlatform('')
+                      setUrl('')
+                      setUrlError('')
+                    }}
+                    className="text-[#737373] hover:text-red-500 text-sm font-medium transition"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <div>
+                    <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                    <select
+                      value={platform}
+                      onChange={e => setPlatform(e.target.value)}
+                      className="w-full rounded-lg border border-[#E2E2E2] px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-white"
+                      required
+                    >
+                      <option value="">Select platform</option>
+                      {PLATFORMS.map(p => (
+                        <option key={p.value} value={p.value}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                    <div className="relative">
+                      <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      <input
+                        type="url"
+                        placeholder="e.g. https://www.github.com/johnappleseed"
+                        value={url}
+                        onChange={e => {
+                          setUrl(e.target.value)
                           setUrlError('')
                         }}
-                        className="text-gray-600 hover:text-red-500 text-sm font-medium transition"
-                      >
-                        Remove
-                      </button>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-3">
-                      <div>
-                        <label className="text-xs text-gray-700 font-normal mb-1 block">Platform</label>
-                        <select
-                          value={platform}
-                          onChange={e => setPlatform(e.target.value)}
-                          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-purple-600 focus:border-purple-600 cursor-pointer"
-                          required
-                        >
-                          <option value="">Select platform</option>
-                          {PLATFORMS.map(p => (
-                            <option key={p.value} value={p.value}>
-                              {p.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="text-xs text-gray-700 font-normal mb-1 block">Link</label>
-                        <div className="relative">
-                          <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                          </svg>
-                          <input
-                            type="url"
-                            placeholder="e.g. https://www.github.com/johnappleseed"
-                            value={url}
-                            onChange={e => {
-                              setUrl(e.target.value)
-                              setUrlError('')
-                            }}
-                            className={`w-full rounded-lg border ${urlError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-purple-600 focus:border-purple-600'} pl-11 pr-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1`}
-                            required
-                          />
-                          {urlError && (
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-red-500 font-normal">
-                              {urlError}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Save button inside form */}
-                      <button
-                        type="submit"
-                        disabled={createLink.isPending}
-                        className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-sm font-semibold transition disabled:opacity-50 mt-4"
-                      >
-                        {createLink.isPending ? 'Saving...' : 'Save'}
-                      </button>
-                    </form>
-                  </div>
-                )}
-
-                {/* Empty state */}
-                {!isLoading && !hasLinks && !showForm && (
-                  <div className="bg-gray-50 rounded-xl p-8 md:p-12 text-center flex items-center justify-center min-h-[300px] md:min-h-[400px]">
-                    <div className="max-w-md mx-auto">
-                      <div className="mb-8 md:mb-10 flex justify-center">
-                        <img 
-                          src="/assets/images/illustration-empty.svg" 
-                          alt="Get started illustration"
-                          className="w-32 h-32 md:w-40 md:h-40"
-                        />
-                      </div>
-                      <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 md:mb-6">
-                        Let's get you started
-                      </h2>
-                      <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-                        Use the "Add new link" button to get started. Once you have more than one link, you can reorder and edit them. We're here to help you share your profiles with everyone!
-                      </p>
+                        className={`w-full rounded-lg border ${urlError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#E2E2E2] focus:ring-[#633CFF] focus:border-[#633CFF]'} pl-11 pr-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 bg-white`}
+                        required
+                      />
+                      {urlError && (
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-red-500">
+                          {urlError}
+                        </span>
+                      )}
                     </div>
                   </div>
-                )}
-
-                {/* Show loading indicator */}
-                {isLoading && !hasLinks && !showForm && (
-                  <div className="bg-gray-50 rounded-xl p-10 text-center flex items-center justify-center min-h-[300px] md:min-h-[400px]">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                      <p className="text-gray-600 text-sm md:text-base">Loading your links...</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Links list */}
-                {hasLinks && (
-                  <div className="space-y-6 pb-6 md:pb-0">
-                    {links.map((link, index) => {
-                      const platformInfo = getPlatformInfo(link.platform)
-                      return (
-                        <div
-                          key={link.id}
-                          className="bg-gray-50 rounded-xl p-5"
-                        >
-                          <div className="flex justify-between items-center mb-3">
-                            <h3 className="text-gray-700 font-bold flex items-center gap-2">
-                              <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
-                                <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
-                              </svg>
-                              Link #{index + 1}
-                            </h3>
-                            <button
-                              onClick={() => deleteLink.mutate({ id: link.id })}
-                              disabled={deleteLink.isPending}
-                              className="text-gray-600 hover:text-red-500 text-sm font-medium transition disabled:opacity-50"
-                            >
-                              Remove
-                            </button>
-                          </div>
-
-                          <div className="space-y-3">
-                            <div>
-                              <label className="text-xs text-gray-700 font-normal mb-1 block">Platform</label>
-                              <div className="flex items-center gap-3 w-full rounded-lg border border-gray-300 px-4 py-3 bg-white">
-                                {platformInfo.icon && (
-                                  <img src={platformInfo.icon} alt="" className="w-4 h-4 flex-shrink-0" />
-                                )}
-                                <span className="text-sm text-gray-900">{platformInfo.label}</span>
-                              </div>
-                            </div>
-
-                            <div>
-                              <label className="text-xs text-gray-700 font-normal mb-1 block">Link</label>
-                              <div className="relative">
-                                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                </svg>
-                                <input
-                                  value={link.url}
-                                  readOnly
-                                  className="w-full rounded-lg border border-gray-300 pl-11 pr-3 py-3 text-sm bg-white text-gray-900"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
+                </form>
               </div>
+            )}
+
+            {/* EMPTY STATE */}
+            {!isLoading && links.length === 0 && !showForm && (
+              <div className="bg-[#FAFAFA] rounded-xl p-10 text-center space-y-6">
+                <img
+                  src="/assets/images/illustration-empty.svg"
+                  alt="empty"
+                  className="mx-auto w-32 lg:w-auto"
+                />
+                <h2 className="text-xl font-bold text-gray-900">
+                  Let's get you started
+                </h2>
+                <p className="text-sm text-[#737373] max-w-md mx-auto leading-relaxed">
+                  Use the "Add new link" button to get started. Once you have more
+                  than one link, you can reorder and edit them. We're here to help
+                  you share your profiles with everyone!
+                </p>
+              </div>
+            )}
+
+            {/* Show loading */}
+            {isLoading && links.length === 0 && !showForm && (
+              <div className="bg-[#FAFAFA] rounded-xl p-10 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#633CFF] mx-auto mb-4"></div>
+                <p className="text-[#737373] text-sm">Loading your links...</p>
+              </div>
+            )}
+
+            {/* Links list */}
+            {links.length > 0 && (
+              <div className="space-y-6">
+                {links.map((link, index) => {
+                  const platformInfo = getPlatformInfo(link.platform)
+                  return (
+                    <div
+                      key={link.id}
+                      className="bg-[#FAFAFA] rounded-xl p-5"
+                    >
+                      <div className="flex justify-between items-center mb-3">
+                        <h3 className="text-gray-700 font-bold flex items-center gap-2">
+                          <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
+                            <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
+                          </svg>
+                          Link #{index + 1}
+                        </h3>
+                        <button
+                          onClick={() => deleteLink.mutate({ id: link.id })}
+                          disabled={deleteLink.isPending}
+                          className="text-[#737373] hover:text-red-500 text-sm font-medium transition disabled:opacity-50"
+                        >
+                          Remove
+                        </button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                          <div className="flex items-center gap-3 w-full rounded-lg border border-[#E2E2E2] px-4 py-3 bg-white">
+                            {platformInfo.icon && (
+                              <img src={platformInfo.icon} alt="" className="w-4 h-4 flex-shrink-0" />
+                            )}
+                            <span className="text-sm text-gray-900">{platformInfo.label}</span>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                          <div className="relative">
+                            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            <input
+                              value={link.url}
+                              readOnly
+                              className="w-full rounded-lg border border-[#E2E2E2] pl-11 pr-3 py-3 text-sm bg-white text-gray-900"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* SAVE */}
+            <div className="flex justify-end pt-4 border-t border-[#E2E2E2]">
+              <button
+                onClick={(e) => showForm && handleSubmit(e as any)}
+                disabled={!showForm || createLink.isPending}
+                className={`px-6 py-3 rounded-lg font-semibold text-sm transition ${
+                  !showForm || createLink.isPending
+                    ? 'bg-[#EFEBFF] text-[#633CFF] cursor-not-allowed opacity-50'
+                    : 'bg-[#633CFF] text-white hover:opacity-90'
+                }`}
+              >
+                {createLink.isPending ? 'Saving...' : 'Save'}
+              </button>
             </div>
+
           </div>
         </div>
       </main>
-
-      {/* Fixed Save Button (Mobile only) */}
-      {showForm && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 safe-area-bottom">
-          <button
-            onClick={(e) => handleSubmit(e as any)}
-            disabled={createLink.isPending}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-base font-semibold transition disabled:opacity-50"
-          >
-            {createLink.isPending ? 'Saving...' : 'Save'}
-          </button>
-        </div>
-      )}
     </div>
   )
 }
