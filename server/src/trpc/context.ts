@@ -1,25 +1,24 @@
 import type { CreateHTTPContextOptions } from '@trpc/server/adapters/standalone'
-import { auth } from '../auth/better-auth.js'
 import { pool } from '../db/client.js'
+import { getSessionUser } from '../lib/auth.js'
 
 export async function createContext({ req, res }: CreateHTTPContextOptions) {
-  try {
-    const session = await auth.api.getSession({ headers: req.headers })
+  const sessionId = req.headers.cookie?.split('session_id=')[1]?.split(';')[0]
 
-    return {
-      req,
-      res,
-      db: pool,
-      user: session?.user ?? null,
+  let user = null
+  if (sessionId) {
+    try {
+      user = await getSessionUser(sessionId)
+    } catch (error) {
+      console.error('Session error:', error)
     }
-  } catch (error) {
-    console.error('Context creation error:', error)
-    return {
-      req,
-      res,
-      db: pool,
-      user: null,
-    }
+  }
+
+  return {
+    req,
+    res,
+    db: pool,
+    user,
   }
 }
 

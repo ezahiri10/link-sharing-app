@@ -7,86 +7,45 @@ async function migrate() {
     
     // Drop tables in correct order (respecting foreign keys)
     await pool.query('DROP TABLE IF EXISTS links CASCADE;')
-    await pool.query('DROP TABLE IF EXISTS verification CASCADE;')
-    await pool.query('DROP TABLE IF EXISTS account CASCADE;')
-    await pool.query('DROP TABLE IF EXISTS session CASCADE;')
-    await pool.query('DROP TABLE IF EXISTS "user" CASCADE;')
+    await pool.query('DROP TABLE IF EXISTS sessions CASCADE;')
+    await pool.query('DROP TABLE IF EXISTS users CASCADE;')
     console.log('✅ Old tables dropped\n')
 
     console.log('🔄 Creating database tables...\n')
 
-    // Create user table for Better Auth
+    // Create users table
     await pool.query(`
-      CREATE TABLE "user" (
+      CREATE TABLE users (
         id TEXT PRIMARY KEY,
         email TEXT UNIQUE NOT NULL,
-        "emailVerified" BOOLEAN NOT NULL DEFAULT false,
-        name TEXT NOT NULL,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-        image TEXT
+        password_hash TEXT NOT NULL,
+        first_name TEXT,
+        last_name TEXT,
+        image TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
       );
     `)
-    console.log('✅ User table created')
+    console.log('✅ Users table created')
 
-    // Create session table
+    // Create sessions table
     await pool.query(`
-      CREATE TABLE session (
+      CREATE TABLE sessions (
         id TEXT PRIMARY KEY,
-        "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-        "expiresAt" TIMESTAMP NOT NULL,
-        token TEXT UNIQUE NOT NULL,
-        "ipAddress" TEXT,
-        "userAgent" TEXT,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        expires_at TIMESTAMP NOT NULL
       );
     `)
-    console.log('✅ Session table created')
+    console.log('✅ Sessions table created')
 
-    // Create account table with ALL required columns including providerId
-    await pool.query(`
-      CREATE TABLE account (
-        id TEXT PRIMARY KEY,
-        "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-        "accountId" TEXT NOT NULL,
-        "providerId" TEXT NOT NULL,
-        password TEXT,
-        "accessToken" TEXT,
-        "refreshToken" TEXT,
-        "idToken" TEXT,
-        "expiresAt" TIMESTAMP,
-        scope TEXT,
-        "accessTokenExpiresAt" TIMESTAMP,
-        "refreshTokenExpiresAt" TIMESTAMP,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
-      );
-    `)
-    console.log('✅ Account table created')
-
-    // Create verification table
-    await pool.query(`
-      CREATE TABLE verification (
-        id TEXT PRIMARY KEY,
-        identifier TEXT NOT NULL,
-        value TEXT NOT NULL,
-        "expiresAt" TIMESTAMP NOT NULL,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
-      );
-    `)
-    console.log('✅ Verification table created')
-
-    // Create links table for your app
+    // Create links table
     await pool.query(`
       CREATE TABLE links (
         id SERIAL PRIMARY KEY,
-        "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        platform TEXT NOT NULL,
         url TEXT NOT NULL,
-        title TEXT,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
+        display_order INTEGER NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT NOW()
       );
     `)
     console.log('✅ Links table created')
