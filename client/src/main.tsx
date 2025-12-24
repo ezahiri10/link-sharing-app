@@ -5,7 +5,7 @@ import { queryClient } from './lib/queryClient'
 import { router } from './router'
 import { trpc } from './lib/trpc'
 import { httpBatchLink } from '@trpc/client'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './index.css'
 
 const trpcClient = trpc.createClient({
@@ -23,23 +23,18 @@ const trpcClient = trpc.createClient({
 })
 
 function App() {
-  const [isReady, setIsReady] = useState(false)
-  const { data: user, isLoading } = trpc.user.me.useQuery(undefined, {
+  const { data: user } = trpc.user.me.useQuery(undefined, {
     retry: false,
+    staleTime: Infinity, // Cache forever until manually invalidated
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   })
 
   useEffect(() => {
-    if (!isLoading) {
-      router.update({
-        context: { user: user || undefined },
-      })
-      setIsReady(true)
-    }
-  }, [user, isLoading])
-
-  if (!isReady) {
-    return <div>Loading...</div>
-  }
+    router.update({
+      context: { user: user || undefined },
+    })
+  }, [user])
 
   return <RouterProvider router={router} />
 }

@@ -18,3 +18,6 @@
 .env
 .env.local
 node_modules/
+screen/
+To-do
+
