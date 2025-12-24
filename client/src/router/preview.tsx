@@ -4,6 +4,6 @@ import PreviewPage from '../pages/PreviewPage'
 
 export const previewRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/preview/$username',
+  path: 'preview/$userId',
   component: PreviewPage,
 })

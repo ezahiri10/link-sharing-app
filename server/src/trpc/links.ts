@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { router, protectedProcedure } from './router'
+import { router, protectedProcedure } from './trpc.js'
 
 export const linksRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }) => {
