@@ -9,19 +9,45 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [confirmError, setConfirmError] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError('')
+    
+    // Reset errors
+    setEmailError('')
+    setPasswordError('')
+    setConfirmError('')
 
+    // Validate empty fields
+    let hasError = false
+    if (!email.trim()) {
+      setEmailError("Can't be empty")
+      hasError = true
+    }
+    if (!password.trim()) {
+      setPasswordError("Can't be empty")
+      hasError = true
+    }
+    if (!confirmPassword.trim()) {
+      setConfirmError("Can't be empty")
+      hasError = true
+    }
+
+    if (hasError) return
+
+    // Validate password match
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setPasswordError('Passwords do not match')
+      setConfirmError('Passwords do not match')
       return
     }
 
+    // Validate password length
     if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setPasswordError('At least 6 characters')
       return
     }
 
@@ -29,13 +55,17 @@ export default function RegisterPage() {
       await register.mutateAsync({ email, password, name: email.split('@')[0] })
       navigate({ to: '/dashboard/links' })
     } catch (err: any) {
-      const errorMessage = err?.shape?.message || err?.message || 'Registration failed. Please try again.'
-      setError(errorMessage)
+      const errorMessage = err?.shape?.message || err?.message || 'Registration failed'
+      if (errorMessage.includes('already exists')) {
+        setEmailError('Email already exists')
+      } else {
+        setEmailError('Please check again')
+      }
     }
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen w-full bg-white flex flex-col items-center justify-center px-4 py-8">
       
       <div className="mb-8 text-center">
         <img 
@@ -47,7 +77,7 @@ export default function RegisterPage() {
 
       {/* Card */}
       <div className="w-full max-w-md border border-gray-200 rounded-xl p-6">
-        <div className="mb-6 text-center">
+        <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900">Create account</h2>
           <p className="text-sm text-gray-500 mt-1">
             Let's get you started sharing your links!
@@ -71,12 +101,23 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="e.g. alex@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-3 py-2 text-sm
-                           text-gray-900 placeholder:text-gray-400
-                           focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setEmailError('')
+                }}
+                className={`
+                  w-full rounded-lg border
+                  ${emailError ? 'border-[#FF3939] focus:ring-[#FF3939]' : 'border-gray-300 focus:ring-purple-500'}
+                  bg-white pl-10 ${emailError ? 'pr-32' : 'pr-3'} py-2 text-sm
+                  text-gray-900 placeholder:text-gray-400
+                  focus:outline-none focus:ring-2
+                `}
               />
+              {emailError && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                  {emailError}
+                </span>
+              )}
             </div>
           </div>
 
@@ -95,12 +136,23 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="At least 6 characters"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-3 py-2 text-sm
-                           text-gray-900 placeholder:text-gray-400
-                           focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setPasswordError('')
+                }}
+                className={`
+                  w-full rounded-lg border
+                  ${passwordError ? 'border-[#FF3939] focus:ring-[#FF3939]' : 'border-gray-300 focus:ring-purple-500'}
+                  bg-white pl-10 ${passwordError ? 'pr-36' : 'pr-3'} py-2 text-sm
+                  text-gray-900 placeholder:text-gray-400
+                  focus:outline-none focus:ring-2
+                `}
               />
+              {passwordError && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                  {passwordError}
+                </span>
+              )}
             </div>
           </div>
 
@@ -119,19 +171,25 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="Confirm your password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-3 py-2 text-sm
-                           text-gray-900 placeholder:text-gray-400
-                           focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value)
+                  setConfirmError('')
+                }}
+                className={`
+                  w-full rounded-lg border
+                  ${confirmError ? 'border-[#FF3939] focus:ring-[#FF3939]' : 'border-gray-300 focus:ring-purple-500'}
+                  bg-white pl-10 ${confirmError ? 'pr-36' : 'pr-3'} py-2 text-sm
+                  text-gray-900 placeholder:text-gray-400
+                  focus:outline-none focus:ring-2
+                `}
               />
+              {confirmError && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                  {confirmError}
+                </span>
+              )}
             </div>
           </div>
-
-          {/* Error */}
-          {error && (
-            <p className="text-sm text-red-500">{error}</p>
-          )}
 
           {/* Button */}
           <button
