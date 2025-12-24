@@ -44,13 +44,13 @@ async function migrate() {
     `)
     console.log('✅ Session table created')
 
-    // Create account table with password column
+    // Create account table with ALL required columns including providerId
     await pool.query(`
       CREATE TABLE account (
         id TEXT PRIMARY KEY,
         "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
         "accountId" TEXT NOT NULL,
-        provider TEXT NOT NULL,
+        "providerId" TEXT NOT NULL,
         password TEXT,
         "accessToken" TEXT,
         "refreshToken" TEXT,
