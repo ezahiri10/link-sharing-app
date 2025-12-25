@@ -204,14 +204,14 @@ export default function LinksPage() {
             <div className="lg:col-span-3 bg-[#FFFFFF] rounded-lg sm:rounded-xl w-full flex flex-col border border-gray-100">
               
               {/* FIXED HEADER - Remove the form from here */}
-              <div className="bg-[#FFFFFF] p-5 space-y-3 w-full max-w-xl mx-auto mt-8">
-                <div>
+              <div className="bg-[#FFFFFF] p-5 space-y-3 w-full mx-auto mt-8">
+                <div className="text-left">
                   <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Customize your links</h1>
                   <p className="text-[10px] sm:text-xs lg:text-sm text-[#737373] mt-0.5 sm:mt-1">
                     Add/edit/remove links below and then share all your profiles with the world!
                   </p>
                 </div>
-                {/* Add New Link Button - With white background */}
+                {/* Add New Link Button - Full width */}
                 <button
                   onClick={() => setShowForm(true)}
                   disabled={showForm}
@@ -219,7 +219,6 @@ export default function LinksPage() {
                 >
                   + Add new link
                 </button>
-                {/* Form removed from here */}
               </div>
 
               {/* SCROLLABLE CONTENT */}
