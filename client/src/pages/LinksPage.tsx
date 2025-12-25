@@ -95,7 +95,7 @@ export default function LinksPage() {
             {/* Logo */}
             <div className="flex items-center gap-1 sm:gap-2 min-w-0">
               <img src="/assets/images/logo-devlinks-small.svg" alt="devlinks" className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 flex-shrink-0" />
-              <span className="hidden xs:inline font-semibold text-sm sm:text-base lg:text-lg truncate">devlinks</span>
+              <span className="hidden sm:inline font-semibold text-sm sm:text-base lg:text-lg text-[#333333] truncate">devlinks</span>
             </div>
 
             {/* Navigation */}
@@ -235,7 +235,7 @@ export default function LinksPage() {
                           setUrl("");
                           setUrlError("");
                         }}
-                        className="text-[#737373] hover:text-red-500 text-sm font-medium transition"
+                        className="bg-[#FFFFFF] text-[#737373] hover:text-red-500 text-sm font-medium px-3 py-1.5 transition"
                       >
                         Remove
                       </button>
@@ -338,7 +338,7 @@ export default function LinksPage() {
                             <button
                               onClick={() => deleteLink.mutate({ id: link.id })}
                               disabled={deleteLink.isPending}
-                              className="text-sm text-[#737373] hover:text-red-500 transition disabled:opacity-50"
+                              className="bg-white text-[#737373] hover:text-red-500 text-sm font-medium px-3 py-1.5 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               Remove
                             </button>
