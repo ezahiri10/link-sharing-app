@@ -353,8 +353,8 @@ export default function LinksPage() {
                               setUrlError("");
                             }}
                             className={`w-full rounded-lg border ${
-                              urlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
-                            } pl-11 pr-28 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
+                              urlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939] text-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF] text-[#333333]"
+                            } pl-11 pr-28 py-3 text-sm placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
                           />
 
                           {urlError && (
@@ -459,8 +459,8 @@ export default function LinksPage() {
                                       setEditUrlError("");
                                     }}
                                     className={`w-full rounded-lg border ${
-                                      editUrlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
-                                    } pl-11 pr-28 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
+                                      editUrlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939] text-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF] text-[#333333]"
+                                    } pl-11 pr-28 py-3 text-sm focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
                                   />
 
                                   {editUrlError && (
