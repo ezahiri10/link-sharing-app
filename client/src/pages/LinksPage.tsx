@@ -28,9 +28,10 @@ export default function LinksPage() {
     onSuccess: () => {
       utils.links.getAll.invalidate();
       setShowForm(false);
-      setPlatform("");
+      setPlatform("github");
       setUrl("");
       setUrlError("");
+      setPlatformError("");
     },
   });
 
@@ -46,21 +47,66 @@ export default function LinksPage() {
   });
 
   const [showForm, setShowForm] = useState(false);
-  const [platform, setPlatform] = useState("");
+  const [platform, setPlatform] = useState("github");
   const [url, setUrl] = useState("");
   const [urlError, setUrlError] = useState("");
+  const [platformError, setPlatformError] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editPlatform, setEditPlatform] = useState("");
   const [editUrl, setEditUrl] = useState("");
+  const [editUrlError, setEditUrlError] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setUrlError("");
-    if (!platform || !url) {
-      if (!url) setUrlError("Can't be empty");
+    setPlatformError("");
+    
+    let hasError = false;
+    
+    if (!platform) {
+      setPlatformError("Can't be empty");
+      hasError = true;
+    }
+    
+    if (!url) {
+      setUrlError("Can't be empty");
+      hasError = true;
+    } else {
+      // Basic URL validation
+      try {
+        new URL(url);
+      } catch {
+        setUrlError("Please check the URL");
+        hasError = true;
+      }
+    }
+    
+    if (hasError) return;
+    
+    createLink.mutate({ platform, url });
+  }
+
+  function handleUpdateSubmit(e: React.FormEvent, linkId: number) {
+    e.preventDefault();
+    setEditUrlError("");
+    
+    if (!editUrl) {
+      setEditUrlError("Can't be empty");
       return;
     }
-    createLink.mutate({ platform, url });
+    
+    try {
+      new URL(editUrl);
+    } catch {
+      setEditUrlError("Please check the URL");
+      return;
+    }
+    
+    updateLink.mutate({
+      id: linkId,
+      platform: editPlatform,
+      url: editUrl,
+    });
   }
 
   function getPlatformInfo(value: string) {
@@ -125,6 +171,7 @@ export default function LinksPage() {
                   <path d="M19.61 9.62c-.03-.064-.714-1.583-2.225-3.095-2.023-2.02-4.572-3.088-7.385-3.088-2.812 0-5.362 1.068-7.382 3.088C1.106 8.037.422 9.556.391 9.62a.944.944 0 0 0 0 .761c.029.064.713 1.583 2.226 3.095 2.021 2.02 4.57 3.086 7.383 3.086 2.813 0 5.362-1.067 7.381-3.086 1.513-1.512 2.197-3.03 2.226-3.095a.946.946 0 0 0 .003-.761Zm-3.599 2.578c-1.677 1.651-3.7 2.49-6.01 2.49-2.313 0-4.334-.839-6.01-2.491A10.185 10.185 0 0 1 2.307 10a10.192 10.192 0 0 1 1.686-2.196C5.667 6.15 7.688 5.312 10 5.312s4.333.839 6.009 2.492c.659.652 1.226 1.39 1.685 2.196a10.19 10.19 0 0 1-1.685 2.197h.002Z" fill="currentColor"/>
                   <path d="M10 6.875A3.13 3.13 0 0 0 6.875 10 3.13 3.13 0 0 0 10 13.125 3.13 3.13 0 0 0 13.125 10 3.13 3.13 0 0 0 10 6.875Zm0 4.375c-.69 0-1.25-.56-1.25-1.25S9.31 8.75 10 8.75s1.25.56 1.25 1.25-.56 1.25-1.25 1.25Z" fill="currentColor"/>
                 </svg>
+                <span className="text-sm font-semibold whitespace-nowrap">Preview</span>
               </button>
             </div>
 
@@ -253,9 +300,10 @@ export default function LinksPage() {
                         type="button"
                         onClick={() => {
                           setShowForm(false);
-                          setPlatform("");
+                          setPlatform("github");
                           setUrl("");
                           setUrlError("");
+                          setPlatformError("");
                         }}
                         className="bg-[#FFFFFF] text-[#737373] hover:text-red-500 text-sm font-medium px-3 py-1.5 transition"
                       >
@@ -266,31 +314,38 @@ export default function LinksPage() {
                     <form onSubmit={handleSubmit} className="space-y-3">
                       {/* Platform Dropdown */}
                       <div>
-                        <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                        <label className="text-xs text-[#333333] mb-1 block">Platform</label>
                         <select
                           value={platform}
-                          onChange={(e) => setPlatform(e.target.value)}
-                          className="w-full rounded-lg border border-[#E2E2E2] px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-white"
+                          onChange={(e) => {
+                            setPlatform(e.target.value);
+                            setPlatformError("");
+                          }}
+                          className={`w-full rounded-lg border ${
+                            platformError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
+                          } px-4 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 cursor-pointer bg-[#FFFFFF]`}
                           required
                         >
-                          <option value="">Select platform</option>
                           {PLATFORMS.map((p) => (
                             <option key={p.value} value={p.value}>
                               {p.label}
                             </option>
                           ))}
                         </select>
+                        {platformError && (
+                          <p className="text-xs text-[#FF3939] mt-1">{platformError}</p>
+                        )}
                       </div>
 
                       {/* URL Input */}
                       <div>
-                        <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                        <label className="text-xs text-[#333333] mb-1 block">Link</label>
                         <div className="relative">
-                          <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                           </svg>
                           <input
-                            type="url"
+                            type="text"
                             placeholder="e.g. https://www.github.com/johnappleseed"
                             value={url}
                             onChange={(e) => {
@@ -298,12 +353,12 @@ export default function LinksPage() {
                               setUrlError("");
                             }}
                             className={`w-full rounded-lg border ${
-                              urlError ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#E2E2E2] focus:ring-[#633CFF] focus:border-[#633CFF]"
-                            } pl-11 pr-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 bg-white`}
-                            required
+                              urlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
+                            } pl-11 pr-28 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
                           />
+
                           {urlError && (
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-red-500">
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
                               {urlError}
                             </span>
                           )}
@@ -370,22 +425,15 @@ export default function LinksPage() {
 
                           {isEditing ? (
                             <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                updateLink.mutate({
-                                  id: link.id,
-                                  platform: editPlatform,
-                                  url: editUrl,
-                                });
-                              }}
+                              onSubmit={(e) => handleUpdateSubmit(e, link.id)}
                               className="space-y-3"
                             >
                               <div>
-                                <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                                <label className="text-xs text-[#333333] mb-1 block">Platform</label>
                                 <select
                                   value={editPlatform}
                                   onChange={(e) => setEditPlatform(e.target.value)}
-                                  className="w-full rounded-lg border border-[#E2E2E2] px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-white"
+                                  className="w-full rounded-lg border border-[#D9D9D9] px-4 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-[#FFFFFF]"
                                   required
                                 >
                                   <option value="">Select platform</option>
@@ -398,25 +446,38 @@ export default function LinksPage() {
                               </div>
 
                               <div>
-                                <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                                <label className="text-xs text-[#333333] mb-1 block">Link</label>
                                 <div className="relative">
-                                  <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                   </svg>
                                   <input
-                                    type="url"
+                                    type="text"
                                     value={editUrl}
-                                    onChange={(e) => setEditUrl(e.target.value)}
-                                    className="w-full rounded-lg border border-[#E2E2E2] pl-11 pr-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] bg-white"
-                                    required
+                                    onChange={(e) => {
+                                      setEditUrl(e.target.value);
+                                      setEditUrlError("");
+                                    }}
+                                    className={`w-full rounded-lg border ${
+                                      editUrlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
+                                    } pl-11 pr-28 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
                                   />
+
+                                  {editUrlError && (
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                                      {editUrlError}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
 
                               <div className="flex justify-end gap-2 pt-2">
                                 <button
                                   type="button"
-                                  onClick={() => setEditingId(null)}
+                                  onClick={() => {
+                                    setEditingId(null);
+                                    setEditUrlError("");
+                                  }}
                                   className="px-4 py-2 text-sm text-[#737373] hover:text-[#633CFF] transition bg-transparent"
                                 >
                                   Cancel
@@ -433,40 +494,42 @@ export default function LinksPage() {
                           ) : (
                             <div className="space-y-3">
                               <div>
-                                <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                                <label className="text-xs text-[#333333] mb-1 block">Platform</label>
                                 <div 
                                   onClick={() => {
                                     setEditingId(link.id);
                                     setEditPlatform(link.platform);
                                     setEditUrl(link.url);
+                                    setEditUrlError("");
                                   }}
-                                  className="flex items-center gap-3 w-full rounded-lg border border-[#E2E2E2] px-4 py-3 bg-white cursor-pointer hover:border-[#633CFF] transition"
+                                  className="flex items-center gap-3 w-full rounded-lg border border-[#D9D9D9] px-4 py-3 bg-[#FFFFFF] cursor-pointer hover:border-[#633CFF] transition"
                                 >
                                   {platform.icon && (
                                     <img src={platform.icon} alt="" className="w-4 h-4 flex-shrink-0" />
                                   )}
-                                  <span className="text-sm text-gray-900">{platform.label}</span>
+                                  <span className="text-sm text-[#333333]">{platform.label}</span>
                                 </div>
                               </div>
 
                               <div>
-                                <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                                <label className="text-xs text-[#333333] mb-1 block">Link</label>
                                 <div 
                                   onClick={() => {
                                     setEditingId(link.id);
                                     setEditPlatform(link.platform);
                                     setEditUrl(link.url);
+                                    setEditUrlError("");
                                   }}
                                   className="relative cursor-pointer"
                                 >
-                                  <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                   </svg>
                                   <input
                                     type="text"
                                     value={link.url}
                                     readOnly
-                                    className="w-full rounded-lg border border-[#E2E2E2] pl-11 pr-3 py-3 text-sm bg-white text-gray-900 cursor-pointer hover:border-[#633CFF] transition"
+                                    className="w-full rounded-lg border border-[#D9D9D9] pl-11 pr-3 py-3 text-sm bg-[#FFFFFF] text-[#333333] cursor-pointer hover:border-[#633CFF] transition"
                                   />
                                 </div>
                               </div>
