@@ -203,114 +203,29 @@ export default function LinksPage() {
             {/* EDITOR - Responsive */}
             <div className="lg:col-span-3 bg-[#FFFFFF] rounded-lg sm:rounded-xl w-full flex flex-col border border-gray-100">
               
-              {/* FIXED HEADER */}
-                {/* HEADER & ADD LINK FORM in one card */}
-                <div className="bg-[#FFFFFF] p-5 space-y-3 w-full max-w-xl mx-auto mt-8">
-                  <div>
-                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Customize your links</h1>
-                    <p className="text-[10px] sm:text-xs lg:text-sm text-[#737373] mt-0.5 sm:mt-1">
-                      Add/edit/remove links below and then share all your profiles with the world!
-                    </p>
-                  </div>
-                  {/* Add New Link Button - With white background */}
-                  <button
-                    onClick={() => setShowForm(true)}
-                    disabled={showForm}
-                    className="w-full bg-white border border-[#633CFF] text-[#633CFF] py-2 sm:py-2.5 lg:py-3 rounded-md lg:rounded-lg text-[11px] sm:text-xs lg:text-sm font-semibold hover:bg-[#EFEBFF] active:bg-[#EFEBFF] disabled:border-[#D9D9D9] disabled:text-[#737373] disabled:cursor-not-allowed transition"
-                  >
-                    + Add new link
-                  </button>
-                  {/* ADD LINK FORM */}
-                  {showForm && (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-gray-700 font-bold flex items-center gap-2">
-                          <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
-                            <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
-                          </svg>
-                          Link #{links.length + 1}
-                        </h3>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowForm(false);
-                            setPlatform("");
-                            setUrl("");
-                            setUrlError("");
-                          }}
-                          className="bg-[#FFFFFF] text-[#737373] hover:text-red-500 text-sm font-medium px-3 py-1.5 transition"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                      <form onSubmit={handleSubmit} className="space-y-3">
-                        {/* Platform Dropdown */}
-                        <div>
-                          <label className="text-xs text-gray-700 mb-1 block">Platform</label>
-                          <select
-                            value={platform}
-                            onChange={(e) => setPlatform(e.target.value)}
-                            className="w-full rounded-lg border border-[#E2E2E2] px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-white"
-                            required
-                          >
-                            <option value="">Select platform</option>
-                            {PLATFORMS.map((p) => (
-                              <option key={p.value} value={p.value}>
-                                {p.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {/* URL Input */}
-                        <div>
-                          <label className="text-xs text-gray-700 mb-1 block">Link</label>
-                          <div className="relative">
-                            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                            </svg>
-                            <input
-                              type="url"
-                              placeholder="e.g. https://www.github.com/johnappleseed"
-                              value={url}
-                              onChange={(e) => {
-                                setUrl(e.target.value);
-                                setUrlError("");
-                              }}
-                              className={`w-full rounded-lg border ${
-                                urlError ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#E2E2E2] focus:ring-[#633CFF] focus:border-[#633CFF]"
-                              } pl-11 pr-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 bg-white`}
-                              required
-                            />
-                            {urlError && (
-                              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-red-500">
-                                {urlError}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        {/* Save Button */}
-                        <div className="flex justify-end pt-2">
-                          <button
-                            type="submit"
-                            disabled={createLink.isPending}
-                            className={`px-6 py-3 rounded-lg font-semibold text-sm transition ${
-                              createLink.isPending
-                                ? "bg-[#EFEBFF] text-[#633CFF] cursor-not-allowed opacity-50"
-                                : "bg-[#633CFF] text-white hover:opacity-90"
-                            }`}
-                          >
-                            {createLink.isPending ? "Saving..." : "Save"}
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  )}
+              {/* FIXED HEADER - Remove the form from here */}
+              <div className="bg-[#FFFFFF] p-5 space-y-3 w-full max-w-xl mx-auto mt-8">
+                <div>
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Customize your links</h1>
+                  <p className="text-[10px] sm:text-xs lg:text-sm text-[#737373] mt-0.5 sm:mt-1">
+                    Add/edit/remove links below and then share all your profiles with the world!
+                  </p>
                 </div>
+                {/* Add New Link Button - With white background */}
+                <button
+                  onClick={() => setShowForm(true)}
+                  disabled={showForm}
+                  className="w-full bg-white border border-[#633CFF] text-[#633CFF] py-2 sm:py-2.5 lg:py-3 rounded-md lg:rounded-lg text-[11px] sm:text-xs lg:text-sm font-semibold hover:bg-[#EFEBFF] active:bg-[#EFEBFF] disabled:border-[#D9D9D9] disabled:text-[#737373] disabled:cursor-not-allowed transition"
+                >
+                  + Add new link
+                </button>
+                {/* Form removed from here */}
+              </div>
 
               {/* SCROLLABLE CONTENT */}
               <div id="links-editor-content" className="p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-6 flex-1" style={{ marginTop: 10 }}>
                 
-                {/* ADD LINK FORM */}
+                {/* ADD LINK FORM - Moved here, now appears at the top of the links list */}
                 {showForm && (
                   <div className="bg-[#FAFAFA] rounded-xl p-5 space-y-3">
                     <div className="flex items-center justify-between">
