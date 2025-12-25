@@ -85,6 +85,9 @@ export default function LinksPage() {
             padding-top: 112px !important;
           }
         }
+        .group:hover .group-hover\:profile-purple {
+          filter: invert(32%) sepia(97%) saturate(7492%) hue-rotate(251deg) brightness(91%) contrast(101%) !important;
+        }
       `}</style>
       
       <div className="min-h-screen bg-white w-full overflow-x-hidden">
@@ -104,20 +107,27 @@ export default function LinksPage() {
                 to="/dashboard/links"
                 className="flex items-center gap-1 px-1.5 sm:px-2 lg:px-4 py-1.5 sm:py-2 rounded-md lg:rounded-lg bg-[#EFEBFF] text-[#633CFF]"
               >
-                <svg width="18" height="18" viewBox="0 0 21 20" fill="none" className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0">
-                  <path d="M11.154 14.65a.936.936 0 0 1 0 1.329l-.464.464a4.689 4.689 0 1 1-6.631-6.631l1.579-1.578a.938.938 0 0 1 1.327 1.327l-1.579 1.579a2.813 2.813 0 0 0 3.978 3.978l.463-.463a.936.936 0 0 1 1.327 0ZM16.346 3.05a4.695 4.695 0 0 0-6.631 0l-.464.463a.936.936 0 1 0 1.327 1.327l.464-.463a2.813 2.813 0 0 1 3.978 3.978l-1.579 1.579a.938.938 0 0 0 1.327 1.327l1.579-1.579a4.695 4.695 0 0 0 0-6.631Z" fill="currentColor"/>
-                </svg>
+                <img
+                  src="/assets/images/icon-link.svg"
+                  alt="Links"
+                  className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 filter group-hover:invert group-hover:brightness-0"
+                  style={{ filter: 'invert(32%) sepia(97%) saturate(7492%) hue-rotate(251deg) brightness(91%) contrast(101%)' }}
+                />
                 <span className="hidden sm:inline text-[10px] sm:text-xs lg:text-sm font-semibold">Links</span>
               </Link>
 
               <Link
                 to="/dashboard/profile"
-                className="flex items-center gap-1 px-1.5 sm:px-2 lg:px-4 py-1.5 sm:py-2 rounded-md lg:rounded-lg text-[#737373] hover:bg-gray-100"
+                className="group flex items-center gap-1 px-1.5 sm:px-2 lg:px-4 py-1.5 sm:py-2 rounded-md lg:rounded-lg text-[#737373] hover:bg-gray-100"
               >
-                <svg width="18" height="18" viewBox="0 0 21 20" fill="none" className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0">
-                  <path d="M10.5 1.563A8.437 8.437 0 1 0 18.938 10 8.447 8.447 0 0 0 10.5 1.562ZM6.716 15.357a4.688 4.688 0 0 1 7.568 0 6.54 6.54 0 0 1-7.568 0Zm1.596-5.982a2.188 2.188 0 1 1 4.376 0 2.188 2.188 0 0 1-4.376 0Zm7.344 4.683a6.523 6.523 0 0 0-2.265-1.83 4.062 4.062 0 1 0-5.782 0 6.522 6.522 0 0 0-2.265 1.83 6.562 6.562 0 1 1 10.304 0h.008Z" fill="currentColor"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 21 20"
+                  className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 fill-[#737373] group-hover:fill-[#633CFF] transition-colors"
+                >
+                  <path d="M10.5 1.563A8.437 8.437 0 1 0 18.938 10 8.447 8.447 0 0 0 10.5 1.562ZM6.716 15.357a4.688 4.688 0 0 1 7.568 0 6.54 6.54 0 0 1-7.568 0Zm1.596-5.982a2.188 2.188 0 1 1 4.376 0 2.188 2.188 0 0 1-4.376 0Zm7.344 4.683a6.523 6.523 0 0 0-2.265-1.83 4.062 4.062 0 1 0-5.782 0 6.522 6.522 0 0 0-2.265 1.83 6.562 6.562 0 1 1 10.304 0h.008Z" />
                 </svg>
-                <span className="hidden sm:inline text-[10px] sm:text-xs lg:text-sm">Profile</span>
+                <span className="hidden sm:inline text-[10px] sm:text-xs lg:text-sm text-[#737373] group-hover:text-[#633CFF] transition-colors">Profile Details</span>
               </Link>
             </nav>
 

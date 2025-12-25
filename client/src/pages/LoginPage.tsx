@@ -46,7 +46,7 @@ export default function LoginPage() {
       
       <div className="mb-8 text-center">
         <img 
-          src="/assets/images/logo-devlinks-large.svg" 
+          src="/assets/images/logo-s-large.svg" 
           alt="devlinks"
           className="h-10 mx-auto"
         />
