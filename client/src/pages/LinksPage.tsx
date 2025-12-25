@@ -70,7 +70,7 @@ export default function LinksPage() {
           padding-top: 88px !important;
         }
         #phone-preview-sticky {
-          top: 112px !important;
+          top: 88px !important;
         }
         #links-editor-content {
           max-height: calc(100vh - 200px);
@@ -80,9 +80,17 @@ export default function LinksPage() {
           background-color: #FFFFFF !important;
           min-height: 100vh;
         }
+        @media (min-width: 640px) {
+          #phone-preview-sticky {
+            top: 96px !important;
+          }
+        }
         @media (min-width: 1024px) {
           #links-page-main {
             padding-top: 112px !important;
+          }
+          #phone-preview-sticky {
+            top: 112px !important;
           }
         }
       `}</style>
@@ -148,7 +156,7 @@ export default function LinksPage() {
               className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start"
             >
               <div className="bg-white rounded-xl p-6 w-full max-w-md flex justify-center">
-                <div className="relative inline-block">
+                <div className="relative inline-block pt-[82px]">
                   <img
                     src="/assets/images/illustration-phone-mockup.svg"
                     alt="phone preview"
