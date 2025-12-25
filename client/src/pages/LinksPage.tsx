@@ -145,10 +145,10 @@ export default function LinksPage() {
             {/* PHONE PREVIEW - Hidden on mobile/tablet */}
             <div
               id="phone-preview-sticky"
-              className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start"
+              className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start mt-8"
             >
               <div className="bg-white rounded-xl p-6 w-full max-w-md flex justify-center">
-                <div className="relative inline-block pt-[32px]">
+                <div className="relative inline-block">
                   <img
                     src="/assets/images/illustration-phone-mockup.svg"
                     alt="phone preview"
