@@ -1,0 +1,131 @@
+import { useState } from "react";
+import { PLATFORMS } from "../../constants/platforms";
+
+interface AddLinkFormProps {
+  linkNumber: number;
+  onSubmit: (platform: string, url: string) => void;
+  onCancel: () => void;
+  isPending: boolean;
+}
+
+export function AddLinkForm({ linkNumber, onSubmit, onCancel, isPending }: AddLinkFormProps) {
+  const [platform, setPlatform] = useState("github");
+  const [url, setUrl] = useState("");
+  const [urlError, setUrlError] = useState("");
+  const [platformError, setPlatformError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setUrlError("");
+    setPlatformError("");
+    
+    let hasError = false;
+    
+    if (!platform) {
+      setPlatformError("Can't be empty");
+      hasError = true;
+    }
+    
+    if (!url) {
+      setUrlError("Can't be empty");
+      hasError = true;
+    } else {
+      try {
+        new URL(url);
+      } catch {
+        setUrlError("Please check the URL");
+        hasError = true;
+      }
+    }
+    
+    if (hasError) return;
+    
+    onSubmit(platform, url);
+  };
+
+  return (
+    <div className="bg-[#FAFAFA] rounded-xl p-5 space-y-3">
+      <div className="flex items-center justify-between">
+        <h3 className="text-gray-700 font-bold flex items-center gap-2">
+          <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
+            <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          Link #{linkNumber}
+        </h3>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="bg-[#FFFFFF] text-[#737373] hover:text-red-500 text-sm font-medium px-3 py-1.5 transition"
+        >
+          Remove
+        </button>
+      </div>
+      
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label className="text-xs text-[#333333] mb-1 block">Platform</label>
+          <select
+            value={platform}
+            onChange={(e) => {
+              setPlatform(e.target.value);
+              setPlatformError("");
+            }}
+            className={`w-full rounded-lg border ${
+              platformError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
+            } px-4 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 cursor-pointer bg-[#FFFFFF]`}
+            required
+          >
+            {PLATFORMS.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+          {platformError && (
+            <p className="text-xs text-[#FF3939] mt-1">{platformError}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="text-xs text-[#333333] mb-1 block">Link</label>
+          <div className="relative">
+            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            <input
+              type="text"
+              placeholder="e.g. https://www.github.com/johnappleseed"
+              value={url}
+              onChange={(e) => {
+                setUrl(e.target.value);
+                setUrlError("");
+              }}
+              className={`w-full rounded-lg border ${
+                urlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939] text-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF] text-[#333333]"
+              } pl-11 pr-28 py-3 text-sm placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
+            />
+            {urlError && (
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                {urlError}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-2">
+          <button
+            type="submit"
+            disabled={isPending}
+            className={`px-6 py-3 rounded-lg font-semibold text-sm transition ${
+              isPending
+                ? "bg-[#EFEBFF] text-[#633CFF] cursor-not-allowed opacity-50"
+                : "bg-[#633CFF] text-white hover:opacity-90"
+            }`}
+          >
+            {isPending ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
