@@ -34,6 +34,13 @@ export default function LinksPage() {
     },
   });
 
+  const updateLink = trpc.links.update.useMutation({
+    onSuccess: () => {
+      utils.links.getAll.invalidate();
+      setEditingId(null);
+    },
+  });
+
   const deleteLink = trpc.links.delete.useMutation({
     onSuccess: () => utils.links.getAll.invalidate(),
   });
@@ -42,6 +49,9 @@ export default function LinksPage() {
   const [platform, setPlatform] = useState("");
   const [url, setUrl] = useState("");
   const [urlError, setUrlError] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editPlatform, setEditPlatform] = useState("");
+  const [editUrl, setEditUrl] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -333,6 +343,8 @@ export default function LinksPage() {
                   <div className="space-y-4">
                     {links.map((link, index) => {
                       const platform = getPlatformInfo(link.platform);
+                      const isEditing = editingId === link.id;
+                      
                       return (
                         <div key={link.id} className="bg-[#FAFAFA] rounded-xl p-5">
                           <div className="flex items-center justify-between mb-3">
@@ -345,39 +357,116 @@ export default function LinksPage() {
                             <button
                               onClick={() => deleteLink.mutate({ id: link.id })}
                               disabled={deleteLink.isPending}
-                              className="bg-white text-[#737373] hover:text-red-500 text-sm font-medium px-3 py-1.5 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="text-[#737373] hover:text-red-500 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
                             >
                               Remove
                             </button>
                           </div>
-                          <div className="space-y-3">
-                            {/* Platform Display */}
-                            <div>
-                              <label className="text-xs text-gray-700 mb-1 block">Platform</label>
-                              <div className="flex items-center gap-3 w-full rounded-lg border border-[#E2E2E2] px-4 py-3 bg-white">
-                                {platform.icon && (
-                                  <img src={platform.icon} alt="" className="w-4 h-4 flex-shrink-0" />
-                                )}
-                                <span className="text-sm text-gray-900">{platform.label}</span>
-                              </div>
-                            </div>
 
-                            {/* URL Display */}
-                            <div>
-                              <label className="text-xs text-gray-700 mb-1 block">Link</label>
-                              <div className="relative">
-                                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                </svg>
-                                <input
-                                  type="text"
-                                  value={link.url}
-                                  readOnly
-                                  className="w-full rounded-lg border border-[#E2E2E2] pl-11 pr-3 py-3 text-sm bg-white text-gray-900"
-                                />
+                          {isEditing ? (
+                            <form
+                              onSubmit={(e) => {
+                                e.preventDefault();
+                                updateLink.mutate({
+                                  id: link.id,
+                                  platform: editPlatform,
+                                  url: editUrl,
+                                });
+                              }}
+                              className="space-y-3"
+                            >
+                              <div>
+                                <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                                <select
+                                  value={editPlatform}
+                                  onChange={(e) => setEditPlatform(e.target.value)}
+                                  className="w-full rounded-lg border border-[#E2E2E2] px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-white"
+                                  required
+                                >
+                                  <option value="">Select platform</option>
+                                  {PLATFORMS.map((p) => (
+                                    <option key={p.value} value={p.value}>
+                                      {p.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              <div>
+                                <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                                <div className="relative">
+                                  <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                  </svg>
+                                  <input
+                                    type="url"
+                                    value={editUrl}
+                                    onChange={(e) => setEditUrl(e.target.value)}
+                                    className="w-full rounded-lg border border-[#E2E2E2] pl-11 pr-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] bg-white"
+                                    required
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="flex justify-end gap-2 pt-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingId(null)}
+                                  className="px-4 py-2 text-sm text-[#737373] hover:text-[#633CFF] transition bg-transparent"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="submit"
+                                  disabled={updateLink.isPending}
+                                  className="px-6 py-3 rounded-lg font-semibold text-sm bg-[#633CFF] text-white hover:opacity-90 transition disabled:opacity-50"
+                                >
+                                  {updateLink.isPending ? "Saving..." : "Save"}
+                                </button>
+                              </div>
+                            </form>
+                          ) : (
+                            <div className="space-y-3">
+                              <div>
+                                <label className="text-xs text-gray-700 mb-1 block">Platform</label>
+                                <div 
+                                  onClick={() => {
+                                    setEditingId(link.id);
+                                    setEditPlatform(link.platform);
+                                    setEditUrl(link.url);
+                                  }}
+                                  className="flex items-center gap-3 w-full rounded-lg border border-[#E2E2E2] px-4 py-3 bg-white cursor-pointer hover:border-[#633CFF] transition"
+                                >
+                                  {platform.icon && (
+                                    <img src={platform.icon} alt="" className="w-4 h-4 flex-shrink-0" />
+                                  )}
+                                  <span className="text-sm text-gray-900">{platform.label}</span>
+                                </div>
+                              </div>
+
+                              <div>
+                                <label className="text-xs text-gray-700 mb-1 block">Link</label>
+                                <div 
+                                  onClick={() => {
+                                    setEditingId(link.id);
+                                    setEditPlatform(link.platform);
+                                    setEditUrl(link.url);
+                                  }}
+                                  className="relative cursor-pointer"
+                                >
+                                  <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                  </svg>
+                                  <input
+                                    type="text"
+                                    value={link.url}
+                                    readOnly
+                                    className="w-full rounded-lg border border-[#E2E2E2] pl-11 pr-3 py-3 text-sm bg-white text-gray-900 cursor-pointer hover:border-[#633CFF] transition"
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       );
                     })}
