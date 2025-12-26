@@ -27,6 +27,8 @@ export const userRouter = router({
 
       // Upload image to Cloudinary if provided
       if (avatarBase64) {
+        console.log('📤 Starting Cloudinary upload...');
+
         // Get current user's image
         const currentUser = await ctx.db.query(
           'SELECT image FROM users WHERE id = $1',
@@ -34,12 +36,17 @@ export const userRouter = router({
         );
 
         // Delete old image if exists
-        if (currentUser.rows[0]?.image) {
+        if (
+          currentUser.rows[0]?.image &&
+          currentUser.rows[0].image !== 'https://via.placeholder.com/500'
+        ) {
+          console.log('🗑️ Deleting old image...');
           await deleteFromCloudinary(currentUser.rows[0].image).catch(console.error);
         }
 
-        // Upload new image
+        // Upload new image to Cloudinary
         imageUrl = await uploadToCloudinary(avatarBase64);
+        console.log('✅ Upload complete:', imageUrl);
       }
 
       // Update user profile

@@ -37,7 +37,7 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
   return (
     <div
       id="phone-preview-sticky"
-      className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start mt-8"
+      className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start mt-8 pt-20"
       style={{ top: "112px" }}
     >
       <div className="bg-white rounded-xl p-6 w-full max-w-md flex justify-center">

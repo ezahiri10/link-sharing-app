@@ -104,7 +104,7 @@ export default function LinksPage() {
               } : undefined}
             />
 
-            <div className="lg:col-span-3 bg-[#FFFFFF] rounded-lg sm:rounded-xl w-full flex flex-col border border-gray-100">
+            <div className="lg:col-span-3 bg-[#FFFFFF] rounded-lg sm:rounded-xl w-full flex flex-col border border-gray-100  md:pt-6">
               
               <div className="bg-[#FFFFFF] p-5 space-y-3 w-full mx-auto mt-8">
                 <div className="text-left">
