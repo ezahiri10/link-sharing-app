@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
 
-// Validate environment variables
 if (!process.env.CLOUDINARY_CLOUD_NAME) {
   console.error('❌ CLOUDINARY_CLOUD_NAME is not set');
 }
@@ -17,7 +16,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-console.log('🔧 Cloudinary configured with cloud name:', process.env.CLOUDINARY_CLOUD_NAME);
+// console.log('🔧 Cloudinary configured with cloud name:', process.env.CLOUDINARY_CLOUD_NAME);
 
 export async function uploadToCloudinary(
   base64Image: string,
