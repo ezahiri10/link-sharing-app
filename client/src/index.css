@@ -2,6 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Phone preview positioning */
+#phone-preview-sticky {
+  top: 112px !important;
+}
+
+/* Links editor scroll */
+#links-editor-content {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Dashboard main padding */
+#links-page-main {
+  padding-top: 88px !important;
+}
+
+@media (min-width: 1024px) {
+  #links-page-main {
+    padding-top: 112px !important;
+  }
+}
+
+/* Base layout */
+body {
+  background-color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 @font-face {
   font-family: 'Instrument Sans';
   src: url('/assets/fonts/InstrumentSans-VariableFont_wdth,wght.ttf');
