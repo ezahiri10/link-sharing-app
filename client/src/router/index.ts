@@ -4,12 +4,15 @@ import { loginRoute, registerRoute } from './auth'
 import { dashboardRoute } from './dashboard'
 import { linksRoute } from './links'
 import { profileRoute } from './profile'
-import { previewRoute } from './preview'
+import { previewRoute } from './preview';
 
 const routeTree = rootRoute.addChildren([
   loginRoute,
   registerRoute,
-  dashboardRoute.addChildren([linksRoute, profileRoute]),
+  dashboardRoute.addChildren([
+    linksRoute,
+    profileRoute,
+  ]),
   previewRoute,
 ])
 
