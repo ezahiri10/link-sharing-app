@@ -32,12 +32,12 @@ function getDisplayName(firstName?: string, lastName?: string): string {
 export function PhonePreview({ links, profile }: PhonePreviewProps) {
   const initials = getInitials(profile?.firstName, profile?.lastName);
   const displayName = getDisplayName(profile?.firstName, profile?.lastName);
-  const hasImage = profile?.imageUrl && profile.imageUrl.trim() !== "";
+  const hasImage = profile?.imageUrl && profile.imageUrl.trim() !== "" && profile.imageUrl !== "https://via.placeholder.com/500";
 
   return (
     <div
       id="phone-preview-sticky"
-      className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start mt-8 pt-20"
+      className="hidden lg:flex lg:col-span-2 justify-center items-start sticky self-start mt-8"
       style={{ top: "112px" }}
     >
       <div className="bg-white rounded-xl p-6 w-full max-w-md flex justify-center">
@@ -50,31 +50,19 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
           
           {/* Profile Info Overlay */}
           <div className="absolute inset-0 flex flex-col items-center pt-[60px] px-[35px]">
-            {/* Avatar with border */}
-            <div className="w-24 h-24 rounded-full border-4 border-[#633CFF] overflow-hidden flex items-center justify-center bg-[#EEEBFF]">
-              {hasImage ? (
+            {/* Avatar - Only show if image exists */}
+            {hasImage && (
+              <div className="w-24 h-24 rounded-full border-4 border-[#633CFF] overflow-hidden flex items-center justify-center bg-white">
                 <img 
                   src={profile.imageUrl} 
                   alt="Profile" 
                   className="w-full h-full object-cover"
                 />
-              ) : initials ? (
-                <span className="text-3xl font-semibold text-[#633CFF]">
-                  {initials}
-                </span>
-              ) : (
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-[#633CFF]">
-                  <circle cx="20" cy="20" r="20" fill="#D9D9D9" />
-                  <path
-                    d="M20 20c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2.5c-3.34 0-10 1.67-10 5V30h20v-2.5c0-3.33-6.66-5-10-5z"
-                    fill="#633CFF"
-                  />
-                </svg>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Name */}
-            <div className="mt-6 text-center">
+            <div className={hasImage ? "mt-6 text-center" : "mt-16 text-center"}>
               {displayName ? (
                 <h2 className="text-lg font-semibold text-[#333333]">
                   {displayName}
