@@ -4,11 +4,31 @@ import { DashboardHeader } from "../components/layout/DashboardHeader";
 import { PhonePreview } from "../components/preview/PhonePreview";
 import { AddLinkForm } from "../components/links/AddLinkForm";
 import { LinksList } from "../components/links/LinksList";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function LinksPage() {
+  const navigate = useNavigate();
   const utils = trpc.useUtils();
-  const { data: links = [], isLoading } = trpc.links.getAll.useQuery();
-  const { data: user } = trpc.user.me.useQuery();
+  
+  const { data: links = [], isLoading } = trpc.links.getAll.useQuery(undefined, {
+    retry: false,
+    onError: (error) => {
+      if (error.data?.code === 'UNAUTHORIZED') {
+        localStorage.removeItem('sessionId');
+        navigate({ to: '/login' });
+      }
+    },
+  });
+  
+  const { data: user } = trpc.user.me.useQuery(undefined, {
+    retry: false,
+    onError: (error) => {
+      if (error.data?.code === 'UNAUTHORIZED') {
+        localStorage.removeItem('sessionId');
+        navigate({ to: '/login' });
+      }
+    },
+  });
 
   const createLink = trpc.links.create.useMutation({
     onSuccess: () => {
@@ -74,7 +94,15 @@ export default function LinksPage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
             
-            <PhonePreview links={links} />
+            <PhonePreview 
+              links={links}
+              profile={user ? {
+                imageUrl: user.image ?? "",
+                firstName: user.first_name ?? "",
+                lastName: user.last_name ?? "",
+                email: user.email ?? "",
+              } : undefined}
+            />
 
             <div className="lg:col-span-3 bg-[#FFFFFF] rounded-lg sm:rounded-xl w-full flex flex-col border border-gray-100">
               

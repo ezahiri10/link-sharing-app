@@ -1,0 +1,57 @@
+import { z } from 'zod';
+import { router, protectedProcedure } from '../trpc.js';
+import { uploadToCloudinary, deleteFromCloudinary } from '../lib/cloudinary.js';
+
+export const userRouter = router({
+  me: protectedProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db.query(
+      'SELECT id, email, first_name, last_name, image FROM users WHERE id = $1',
+      [ctx.user.user_id]
+    );
+    return result.rows[0] || null;
+  }),
+
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        email: z.string().email(),
+        avatarBase64: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { firstName, lastName, email, avatarBase64 } = input;
+
+      let imageUrl: string | undefined;
+
+      // Upload image to Cloudinary if provided
+      if (avatarBase64) {
+        // Get current user's image
+        const currentUser = await ctx.db.query(
+          'SELECT image FROM users WHERE id = $1',
+          [ctx.user.user_id]
+        );
+
+        // Delete old image if exists
+        if (currentUser.rows[0]?.image) {
+          await deleteFromCloudinary(currentUser.rows[0].image).catch(console.error);
+        }
+
+        // Upload new image
+        imageUrl = await uploadToCloudinary(avatarBase64);
+      }
+
+      // Update user profile
+      const updateQuery = imageUrl
+        ? 'UPDATE users SET first_name = $1, last_name = $2, email = $3, image = $4 WHERE id = $5 RETURNING id, email, first_name, last_name, image'
+        : 'UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4 RETURNING id, email, first_name, last_name, image';
+
+      const values = imageUrl
+        ? [firstName, lastName, email, imageUrl, ctx.user.user_id]
+        : [firstName, lastName, email, ctx.user.user_id];
+
+      const result = await ctx.db.query(updateQuery, values);
+      return result.rows[0];
+    }),
+});

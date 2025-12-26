@@ -1,39 +1,56 @@
-import 'dotenv/config'
-import { createHTTPServer } from '@trpc/server/adapters/standalone'
-import { appRouter } from './trpc/router.js'
-import { createContext } from './trpc/context.js'
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { appRouter } from './routers/index.js';
+import { createContext } from './trpc.js';
 
-async function main() {
-  try {
-    console.log('Initializing database...')
-    
-    const server = createHTTPServer({
-      router: appRouter,
-      createContext,
-      middleware(req, res, next) {
-        // CORS headers
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173')
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        res.setHeader('Access-Control-Allow-Credentials', 'true')
+const app = express();
+const port = process.env.PORT || 3000;
 
-        // Handle preflight
-        if (req.method === 'OPTIONS') {
-          res.writeHead(200)
-          res.end()
-          return
-        }
+// CORS must be first
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
 
-        next()
-      },
-    })
+// Body parsers
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-    server.listen(3000)
-    console.log('🚀 Server running on http://localhost:3000')
-  } catch (error) {
-    console.error('Failed to start server:', error)
-    process.exit(1)
-  }
-}
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
-main()
+// tRPC endpoint
+app.use(
+  '/trpc',
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+    onError: ({ error, type, path }) => {
+      console.error('❌ tRPC Error:', { 
+        type, 
+        path, 
+        message: error.message,
+        code: error.code 
+      });
+    },
+  })
+);
+
+// Catch-all for debugging
+app.use('*', (req, res) => {
+  console.log('❌ Unhandled route:', req.method, req.originalUrl);
+  res.status(404).json({ 
+    error: 'Not found', 
+    path: req.originalUrl,
+    message: 'This endpoint does not exist. tRPC endpoints should go to /trpc/*'
+  });
+});
+
+app.listen(port, () => {
+  console.log(`🚀 Server running at http://localhost:${port}`);
+  console.log(`📡 tRPC endpoint: http://localhost:${port}/trpc`);
+});

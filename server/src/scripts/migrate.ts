@@ -15,7 +15,7 @@ async function migrate() {
 
     // Create users table
     await pool.query(`
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         email TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
@@ -24,7 +24,7 @@ async function migrate() {
         image TEXT,
         created_at TIMESTAMP DEFAULT NOW()
       );
-    `)
+    `);
     console.log('✅ Users table created')
 
     // Create sessions table

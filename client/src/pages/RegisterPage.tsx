@@ -4,7 +4,16 @@ import { useNavigate, Link } from '@tanstack/react-router'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
-  const register = trpc.auth.register.useMutation()
+  const register = trpc.auth.register.useMutation({
+    onSuccess: (data) => {
+      localStorage.setItem('sessionId', data.sessionId);
+      navigate({ to: '/dashboard/links' });
+    },
+    onError: (error) => {
+      console.error('Registration error:', error);
+      setError(error.message || 'Registration failed. Please try again.');
+    },
+  });
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -12,56 +21,24 @@ export default function RegisterPage() {
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [confirmError, setConfirmError] = useState('')
+  const [error, setError] = useState('')
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
     
-    // Reset errors
-    setEmailError('')
-    setPasswordError('')
-    setConfirmError('')
-
-    // Validate empty fields
-    let hasError = false
-    if (!email.trim()) {
-      setEmailError("Can't be empty")
-      hasError = true
-    }
-    if (!password.trim()) {
-      setPasswordError("Can't be empty")
-      hasError = true
-    }
-    if (!confirmPassword.trim()) {
-      setConfirmError("Can't be empty")
-      hasError = true
-    }
-
-    if (hasError) return
-
-    // Validate password match
+    // Validation
     if (password !== confirmPassword) {
-      setPasswordError('Passwords do not match')
-      setConfirmError('Passwords do not match')
-      return
+      setError('Passwords do not match');
+      return;
     }
 
-    // Validate password length
-    if (password.length < 6) {
-      setPasswordError('At least 6 characters')
-      return
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
     }
 
-    try {
-      await register.mutateAsync({ email, password, name: email.split('@')[0] })
-      navigate({ to: '/dashboard/links' })
-    } catch (err: any) {
-      const errorMessage = err?.shape?.message || err?.message || 'Registration failed'
-      if (errorMessage.includes('already exists')) {
-        setEmailError('Email already exists')
-      } else {
-        setEmailError('Please check again')
-      }
-    }
+    register.mutate({ email, password });
   }
 
   return (
@@ -190,6 +167,13 @@ export default function RegisterPage() {
               )}
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="text-center text-sm text-[#FF3939]">
+              {error}
+            </div>
+          )}
 
           {/* Button */}
           <button
