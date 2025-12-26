@@ -43,7 +43,8 @@ export default function ProfilePage() {
     if (user) {
       setFirstName(user.first_name ?? "");
       setLastName(user.last_name ?? "");
-      setEmail(user.email ?? "");
+      // Don't use login email as default - only use if explicitly saved in profile
+      setEmail(user.profile_email ?? "");
       setAvatarPreview(user.image ?? "");
     }
   }, [user]);

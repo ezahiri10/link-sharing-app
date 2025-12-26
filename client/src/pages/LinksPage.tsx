@@ -100,7 +100,7 @@ export default function LinksPage() {
                 imageUrl: user.image ?? "",
                 firstName: user.first_name ?? "",
                 lastName: user.last_name ?? "",
-                email: user.email ?? "",
+                email: user.profile_email ?? "",
               } : undefined}
             />
 
