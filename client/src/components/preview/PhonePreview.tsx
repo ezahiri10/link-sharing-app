@@ -77,10 +77,10 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
             ) : null}
 
             {/* Name */}
-            <div className={`${hasImage ? "mt-6" : "mt-16"} h-[28px] max-w-[237px]`}>
+            <div className={`${hasImage ? "mt-6" : "mt-16"} h-[28px] w-full max-w-[237px]  bg-white`}>
               {displayName ? (
                 <h2
-                  className="text-lg font-semibold text-[#333333] truncate whitespace-nowrap text-center"
+                  className="text-lg font-semibold text-[#333333] truncate whitespace-nowrap text-center    "
                   title={displayName}
                 >
                   {clampText(displayName, 30)}
@@ -91,7 +91,7 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
             </div>
 
             {/* Email */}
-            <div className="mt-2 h-[20px] max-w-[237px]">
+            <div className=" h-[20px] max-w-[237px] bg-white w-full pt-3">
               {profile?.email ? (
                 <p
                   className="text-sm text-[#737373] truncate whitespace-nowrap text-center"
@@ -105,7 +105,7 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
             </div>
 
             {/* Links - Fixed position */}
-            <div className="w-full max-w-[237px] space-y-5 mt-14 flex-shrink-0">
+            <div className="w-full max-w-[237px] space-y-5 bg-white flex-shrink-0  mt-6 py-6">
               {links.slice(0, 5).map((link) => {
                 const platformInfo = getPlatformInfo(link.platform);
                 return (
