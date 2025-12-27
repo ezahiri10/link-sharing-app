@@ -60,8 +60,8 @@ export default function ProfilePage() {
       <DashboardHeader userId={user.id} activeTab="profile" />
 
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 lg:pt-28 pb-8 min-h-screen">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 pt-12 lg:bg-red-500 lg:mt-8">
-          <div className="hidden lg:flex lg:col-span-2 justify-center sticky mt-8" style={{ top: "112px" }}>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="hidden lg:flex lg:col-span-2 justify-center sticky mt-8 shadow-sm border border-gray-100" style={{ top: "112px" }}>
           <PhonePreview
             links={links}
             profile={{
@@ -72,7 +72,7 @@ export default function ProfilePage() {
             }}
           />
           </div>
-          <div className="lg:col-span-3 bg-white rounded-xl p-6 sm:p-10">
+          <div className="lg:col-span-3 bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-gray-100">
             <ProfileForm
               user={user}
               firstName={profile.firstName}

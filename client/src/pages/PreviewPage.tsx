@@ -47,7 +47,7 @@ export default function PreviewPage() {
         }
       `}</style>
 
-      <div className="min-h-screen bg-[#FAFAFA]">
+      <div className="min-h-screen bg-[#FAFAFA] shadow-sm border border-gray-100">
         <PreviewHeader onShareLink={handleShareLink} />
 
         {/* Purple background section */}
