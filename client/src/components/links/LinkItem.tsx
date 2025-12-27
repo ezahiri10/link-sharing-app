@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getPlatformInfo, PLATFORMS } from "../../constants/platforms";
+import { Dropdown } from "../ui/Dropdown";
 
 interface Link {
   id: number;
@@ -75,23 +76,20 @@ export function LinkItem({ link, linkNumber, onUpdate, onDelete, isUpdating, isD
       </div>
 
       {isEditing ? (
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div>
-            <label className="text-xs text-[#333333] mb-1 block">Platform</label>
-            <select
-              value={editPlatform}
-              onChange={(e) => setEditPlatform(e.target.value)}
-              className="w-full rounded-lg border border-[#D9D9D9] px-4 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] cursor-pointer bg-[#FFFFFF]"
-              required
-            >
-              <option value="">Select platform</option>
-              {PLATFORMS.map((p) => (
-                <option key={p.value} value={p.value}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <form
+          onSubmit={(e) => handleUpdateSubmit(e, link.id)}
+          className="space-y-3"
+        >
+          <Dropdown
+            label="Platform"
+            value={editPlatform}
+            options={PLATFORMS.map((p) => ({
+              value: p.value,
+              label: p.label,
+              icon: p.icon,
+            }))}
+            onChange={setEditPlatform}
+          />
 
           <div>
             <label className="text-xs text-[#333333] mb-1 block">Link</label>

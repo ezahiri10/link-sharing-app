@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PLATFORMS } from "../../constants/platforms";
+import { Dropdown } from "../ui/Dropdown";
 
 interface AddLinkFormProps {
   linkNumber: number;
@@ -62,30 +63,23 @@ export function AddLinkForm({ linkNumber, onSubmit, onCancel, isPending }: AddLi
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div>
-          <label className="text-xs text-[#333333] mb-1 block">Platform</label>
-          <select
-            value={platform}
-            onChange={(e) => {
-              setPlatform(e.target.value);
-              setPlatformError("");
-            }}
-            className={`w-full rounded-lg border ${
-              platformError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
-            } px-4 py-3 text-sm text-[#333333] focus:outline-none focus:ring-1 cursor-pointer bg-[#FFFFFF]`}
-            required
-          >
-            {PLATFORMS.map((p) => (
-              <option key={p.value} value={p.value}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-          {platformError && (
-            <p className="text-xs text-[#FF3939] mt-1">{platformError}</p>
-          )}
-        </div>
+        {/* Platform Dropdown */}
+        <Dropdown
+          label="Platform"
+          value={platform}
+          options={PLATFORMS.map((p) => ({
+            value: p.value,
+            label: p.label,
+            icon: p.icon,
+          }))}
+          error={platformError}
+          onChange={(value) => {
+            setPlatform(value);
+            setPlatformError("");
+          }}
+        />
 
+        {/* URL Input */}
         <div>
           <label className="text-xs text-[#333333] mb-1 block">Link</label>
           <div className="relative">

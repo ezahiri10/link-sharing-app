@@ -8,7 +8,7 @@ export function Toast({ message, visible }: ToastProps) {
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
-      <div className="bg-[#333333] text-white px-6 py-4 rounded-xl flex items-center gap-2 shadow-lg">
+      <div className="bg-text-dark text-white px-6 py-4 rounded-xl flex items-center gap-2 shadow-md">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path
             d="M16.25 5L7.5 13.75L3.75 10"

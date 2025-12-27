@@ -46,14 +46,14 @@ export default function LinksPage() {
             }}
           />
 
-          <div className="lg:col-span-3 bg-white rounded-lg sm:rounded-xl w-full flex flex-col border border-gray-100">
+          <div className="lg:col-span-3 bg-white rounded-lg sm:rounded-xl w-full flex flex-col border border-border-default shadow-sm">
             
             <div className="bg-white p-5 space-y-3 w-full mx-auto mt-8">
               <div className="text-left">
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-text-dark">
                   Customize your links
                 </h1>
-                <p className="text-[10px] sm:text-xs lg:text-sm text-[#737373] mt-0.5 sm:mt-1">
+                <p className="text-xs lg:text-sm text-text-gray mt-1">
                   Add/edit/remove links below and then share all your profiles with the world!
                 </p>
               </div>
@@ -61,7 +61,7 @@ export default function LinksPage() {
               <button
                 onClick={() => setShowForm(true)}
                 disabled={showForm}
-                className="w-full bg-white border border-[#633CFF] text-[#633CFF] py-2 sm:py-2.5 lg:py-3 rounded-md lg:rounded-lg text-[11px] sm:text-xs lg:text-sm font-semibold hover:bg-[#EFEBFF] active:bg-[#EFEBFF] disabled:border-[#D9D9D9] disabled:text-[#737373] disabled:cursor-not-allowed transition"
+                className="w-full bg-white border border-primary text-primary py-2 sm:py-2.5 lg:py-3 rounded-md lg:rounded-lg text-xs lg:text-sm font-semibold hover:bg-primary-soft transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 + Add new link
               </button>

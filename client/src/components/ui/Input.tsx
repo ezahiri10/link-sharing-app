@@ -11,9 +11,9 @@ interface InputProps {
 export function Input({ label, value, onChange, placeholder, required, error, type = "text" }: InputProps) {
   return (
     <div className="space-y-1">
-      <label className="text-xs text-[#333333] block">
+      <label className={`text-xs font-regular block ${error ? 'text-error' : 'text-text-dark'}`}>
         {label}
-        {required && <span className="text-[#FF3939]">*</span>}
+        {required && <span className="text-error">*</span>}
       </label>
       <div className="relative">
         <input
@@ -21,14 +21,14 @@ export function Input({ label, value, onChange, placeholder, required, error, ty
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`w-full rounded-lg border ${
+          className={`w-full rounded-md border ${
             error 
-              ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939] text-[#FF3939]" 
-              : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF] text-[#333333]"
-          } px-4 py-3 text-sm placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
+              ? "border-error shadow-focus text-error" 
+              : "border-border-default focus:shadow-focus focus:border-primary text-text-dark"
+          } px-4 py-3 text-sm font-regular placeholder:text-text-gray focus:outline-none transition-all bg-white`}
         />
         {error && (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-error">
             {error}
           </span>
         )}
