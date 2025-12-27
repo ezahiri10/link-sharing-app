@@ -77,7 +77,7 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
             ) : null}
 
             {/* Name */}
-            <div className={`${hasImage ? "mt-6" : "mt-16"} h-[28px] w-full max-w-[237px]  bg-white`}>
+            <div className={`${hasImage ? "mt-6" : "mt-16"} h-[28px] w-full max-w-[200px]   bg-white`}>
               {displayName ? (
                 <h2
                   className="text-lg font-semibold text-[#333333] truncate whitespace-nowrap text-center    "
@@ -91,7 +91,7 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
             </div>
 
             {/* Email */}
-            <div className=" h-[20px] max-w-[237px] bg-white w-full pt-3">
+            <div className=" h-[20px] max-w-[237px] bg-white w-full pt-1">
               {profile?.email ? (
                 <p
                   className="text-sm text-[#737373] truncate whitespace-nowrap text-center"
