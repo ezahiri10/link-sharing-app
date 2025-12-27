@@ -85,7 +85,7 @@ export default function RegisterPage() {
       {/* Card */}
       <div className="w-full max-w-md border border-gray-200 rounded-xl p-6">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Create account</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#333333] mb-2">Create account</h2>
           <p className="text-sm text-gray-500 mt-1">
             Let's get you started sharing your links!
           </p>
