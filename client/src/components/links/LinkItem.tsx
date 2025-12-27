@@ -1,170 +1,207 @@
 import { useState } from "react";
-import { getPlatformInfo, PLATFORMS } from "../../constants/platforms";
+import { getPlatformInfo } from "../../constants/platforms";
 import { Dropdown } from "../ui/Dropdown";
 
-interface Link {
-  id: number;
-  platform: string;
-  url: string;
-}
-
 interface LinkItemProps {
-  link: Link;
-  linkNumber: number;
+  link: {
+    id: number;
+    platform: string;
+    url: string;
+  };
+  index: number;
   onUpdate: (id: number, platform: string, url: string) => void;
   onDelete: (id: number) => void;
   isUpdating: boolean;
   isDeleting: boolean;
 }
 
-export function LinkItem({ link, linkNumber, onUpdate, onDelete, isUpdating, isDeleting }: LinkItemProps) {
+const PLATFORMS = [
+  { value: "github", label: "GitHub", icon: "/assets/images/icon-github.svg" },
+  { value: "youtube", label: "YouTube", icon: "/assets/images/icon-youtube.svg" },
+  { value: "linkedin", label: "LinkedIn", icon: "/assets/images/icon-linkedin.svg" },
+  { value: "twitter", label: "Twitter", icon: "/assets/images/icon-twitter.svg" },
+  { value: "facebook", label: "Facebook", icon: "/assets/images/icon-facebook.svg" },
+  { value: "twitch", label: "Twitch", icon: "/assets/images/icon-twitch.svg" },
+  { value: "devto", label: "Dev.to", icon: "/assets/images/icon-devto.svg" },
+  { value: "codewars", label: "Codewars", icon: "/assets/images/icon-codewars.svg" },
+  { value: "codepen", label: "CodePen", icon: "/assets/images/icon-codepen.svg" },
+  { value: "freecodecamp", label: "freeCodeCamp", icon: "/assets/images/icon-freecodecamp.svg" },
+  { value: "gitlab", label: "GitLab", icon: "/assets/images/icon-gitlab.svg" },
+  { value: "hashnode", label: "Hashnode", icon: "/assets/images/icon-hashnode.svg" },
+  { value: "stackoverflow", label: "Stack Overflow", icon: "/assets/images/icon-stackoverflow.svg" },
+  { value: "frontendmentor", label: "Frontend Mentor", icon: "/assets/images/icon-frontend-mentor.svg" },
+];
+
+export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleting }: LinkItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editPlatform, setEditPlatform] = useState(link.platform);
   const [editUrl, setEditUrl] = useState(link.url);
-  const [editUrlError, setEditUrlError] = useState("");
+  const [urlError, setUrlError] = useState("");
 
-  const platform = getPlatformInfo(link.platform);
+  const platformInfo = getPlatformInfo(link.platform);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setEditUrlError("");
-    
-    if (!editUrl) {
-      setEditUrlError("Can't be empty");
-      return;
-    }
-    
-    try {
-      new URL(editUrl);
-    } catch {
-      setEditUrlError("Please check the URL");
-      return;
-    }
-    
-    onUpdate(link.id, editPlatform, editUrl);
-    setIsEditing(false);
-  };
-
-  const startEditing = () => {
+  const handleEdit = () => {
     setIsEditing(true);
     setEditPlatform(link.platform);
     setEditUrl(link.url);
-    setEditUrlError("");
+    setUrlError("");
   };
 
-  const cancelEditing = () => {
+  const handleCancel = () => {
     setIsEditing(false);
-    setEditUrlError("");
+    setEditPlatform(link.platform);
+    setEditUrl(link.url);
+    setUrlError("");
+  };
+
+  const handleSave = () => {
+    // Validate URL
+    if (!editUrl.trim()) {
+      setUrlError("Can't be empty");
+      return;
+    }
+
+    try {
+      new URL(editUrl);
+    } catch {
+      setUrlError("Please enter a valid URL");
+      return;
+    }
+
+    // Only update if something changed
+    if (editPlatform !== link.platform || editUrl !== link.url) {
+      onUpdate(link.id, editPlatform, editUrl);
+    }
+    
+    setIsEditing(false);
+    setUrlError("");
+  };
+
+  // Handle blur on URL input to auto-save
+  const handleUrlBlur = () => {
+    if (editUrl !== link.url && editUrl.trim()) {
+      handleSave();
+    }
+  };
+
+  // Handle Enter key to save
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    } else if (e.key === 'Escape') {
+      handleCancel();
+    }
   };
 
   return (
-    <div className="bg-[#FAFAFA] rounded-xl p-5">
+    <div className="bg-bg-light rounded-lg p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-gray-700 flex items-center gap-2">
-          <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
-            <path d="M1 1h10M1 5h10" stroke="#737373" strokeWidth="1.5" strokeLinecap="round"/>
+        <div className="flex items-center gap-2">
+          <svg width="12" height="6" viewBox="0 0 12 6" className="text-text-gray">
+            <path fill="currentColor" d="M0 0h12v1H0zM0 5h12v1H0z"/>
           </svg>
-          Link #{linkNumber}
-        </h3>
+          <span className="text-sm font-semibold text-text-gray">
+            Link #{index + 1}
+          </span>
+        </div>
         <button
           onClick={() => onDelete(link.id)}
           disabled={isDeleting}
-          className="text-[#737373] hover:text-red-500 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
+          className="text-text-gray hover:text-error text-sm font-regular transition disabled:opacity-50"
         >
           Remove
         </button>
       </div>
 
       {isEditing ? (
-        <form
-          onSubmit={(e) => handleUpdateSubmit(e, link.id)}
-          className="space-y-3"
-        >
+        <div className="space-y-3">
           <Dropdown
             label="Platform"
             value={editPlatform}
-            options={PLATFORMS.map((p) => ({
-              value: p.value,
-              label: p.label,
-              icon: p.icon,
-            }))}
+            options={PLATFORMS}
             onChange={setEditPlatform}
           />
 
           <div>
-            <label className="text-xs text-[#333333] mb-1 block">Link</label>
+            <label className="text-xs font-regular text-text-dark mb-1 block">
+              Link
+            </label>
             <div className="relative">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-gray pointer-events-none"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                />
               </svg>
               <input
-                type="text"
+                type="url"
+                placeholder="e.g. https://github.com/username"
                 value={editUrl}
                 onChange={(e) => {
                   setEditUrl(e.target.value);
-                  setEditUrlError("");
+                  setUrlError("");
                 }}
-                className={`w-full rounded-lg border ${
-                  editUrlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939] text-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF] text-[#333333]"
-                } pl-11 pr-28 py-3 text-sm focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
+                onBlur={handleUrlBlur}
+                onKeyDown={handleKeyDown}
+                className={`w-full rounded-md border ${
+                  urlError
+                    ? "border-error shadow-focus"
+                    : "border-border-default focus:shadow-focus focus:border-primary"
+                } pl-10 pr-4 py-3 text-sm font-regular text-text-dark placeholder:text-text-gray focus:outline-none transition-all bg-white`}
               />
-              {editUrlError && (
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
-                  {editUrlError}
+              {urlError && (
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-error">
+                  {urlError}
                 </span>
               )}
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex gap-2 justify-end pt-2">
             <button
               type="button"
-              onClick={cancelEditing}
-              className="px-4 py-2 text-sm text-[#737373] hover:text-[#633CFF] transition bg-transparent"
+              onClick={handleCancel}
+              className="px-4 py-2 rounded-md border border-border-default text-text-gray text-sm font-semibold hover:bg-bg-light transition"
             >
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSave}
               disabled={isUpdating}
-              className="px-6 py-3 rounded-lg font-semibold text-sm bg-[#633CFF] text-white hover:opacity-90 transition disabled:opacity-50"
+              className="px-4 py-2 rounded-md bg-primary text-white text-sm font-semibold hover:opacity-90 transition disabled:opacity-50"
             >
               {isUpdating ? "Saving..." : "Save"}
             </button>
           </div>
-        </form>
+        </div>
       ) : (
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs text-[#333333] mb-1 block">Platform</label>
-            <div 
-              onClick={startEditing}
-              className="flex items-center gap-3 w-full rounded-lg border border-[#D9D9D9] px-4 py-3 bg-[#FFFFFF] cursor-pointer hover:border-[#633CFF] transition"
-            >
-              {platform.icon && (
-                <img src={platform.icon} alt="" className="w-4 h-4 flex-shrink-0" />
-              )}
-              <span className="text-sm text-[#333333]">{platform.label}</span>
+        <div 
+          onClick={handleEdit}
+          className="flex items-center justify-between cursor-pointer hover:bg-white p-3 rounded-md transition"
+        >
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            {platformInfo.icon && (
+              <img src={platformInfo.icon} alt="" className="w-4 h-4 flex-shrink-0" />
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-text-dark truncate">
+                {platformInfo.label}
+              </p>
+              <p className="text-xs text-text-gray truncate">{link.url}</p>
             </div>
           </div>
-
-          <div>
-            <label className="text-xs text-[#333333] mb-1 block">Link</label>
-            <div 
-              onClick={startEditing}
-              className="relative cursor-pointer"
-            >
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-              </svg>
-              <input
-                type="text"
-                value={link.url}
-                readOnly
-                className="w-full rounded-lg border border-[#D9D9D9] pl-11 pr-3 py-3 text-sm bg-[#FFFFFF] text-[#333333] cursor-pointer hover:border-[#633CFF] transition"
-              />
-            </div>
-          </div>
+          <svg className="w-4 h-4 text-text-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
         </div>
       )}
     </div>
