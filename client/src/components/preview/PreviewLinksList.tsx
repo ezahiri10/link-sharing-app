@@ -41,15 +41,11 @@ export function PreviewLinksList({ links }: PreviewLinksListProps) {
                 {platformInfo.label}
               </span>
             </div>
-            <svg 
+            <img 
+              src="/assets/images/icon-arrow-right.svg" 
+              alt="" 
               className="w-4 h-4 flex-shrink-0 ml-2 group-hover:translate-x-1 transition-transform" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 16 16" 
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 3l5 5-5 5" />
-            </svg>
+            />
           </a>
         );
       })}

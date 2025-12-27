@@ -60,7 +60,7 @@ export default function ProfilePage() {
       <DashboardHeader userId={user.id} activeTab="profile" />
 
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 lg:pt-28 pb-8 min-h-screen">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 pt-12">
           
           <PhonePreview
             links={links}

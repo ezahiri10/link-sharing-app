@@ -92,43 +92,33 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
               )}
             </div>
 
-            {/* Links (UNCHANGED & SAFE) */}
-            <div className="w-full max-w-[237px] mt-14 space-y-5">
+            {/* Links - Fixed position */}
+            <div className="w-full max-w-[237px] space-y-5 mt-14 flex-shrink-0">
               {links.slice(0, 5).map((link) => {
-                const platform = getPlatformInfo(link.platform);
-
+                const platformInfo = getPlatformInfo(link.platform);
                 return (
                   <div
                     key={link.id}
-                    style={{ backgroundColor: platform.color }}
+                    style={{ backgroundColor: platformInfo.color }}
                     className="rounded-lg px-4 py-3 flex items-center justify-between text-white min-h-[44px]"
                   >
                     <div className="flex items-center gap-2 min-w-0 flex-1">
-                      {platform.icon && (
-                        <img
-                          src={platform.icon}
-                          alt=""
-                          className="w-4 h-4 brightness-0 invert flex-shrink-0"
+                      {platformInfo.icon && (
+                        <img 
+                          src={platformInfo.icon} 
+                          alt="" 
+                          className="w-4 h-4 flex-shrink-0 brightness-0 invert" 
                         />
                       )}
                       <span className="text-xs font-medium truncate">
-                        {platform.label}
+                        {platformInfo.label}
                       </span>
                     </div>
-
-                    <svg
-                      className="w-3 h-3 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 16 16"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 3l5 5-5 5"
-                      />
-                    </svg>
+                    <img 
+                      src="/assets/images/icon-arrow-right.svg" 
+                      alt="" 
+                      className="w-3 h-3 flex-shrink-0 ml-2" 
+                    />
                   </div>
                 );
               })}
