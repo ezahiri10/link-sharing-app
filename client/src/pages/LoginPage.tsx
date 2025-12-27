@@ -6,27 +6,53 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const login = trpc.auth.login.useMutation({
     onSuccess: (data) => {
       localStorage.setItem("sessionId", data.sessionId);
       navigate({ to: "/dashboard/links" });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Login error:", error);
-      setError(error.message || "Invalid email or password");
+
+      // Check for validation errors
+      if (error.message?.includes("Invalid email") || error.data?.zodError) {
+        setEmailError("Invalid email");
+      } else {
+        // Apply "Invalid credentials" to both fields
+        setEmailError("Invalid credentials");
+        setPasswordError("Invalid credentials");
+      }
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setEmailError("");
+    setPasswordError("");
 
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
+    let hasError = false;
+
+    if (!email) {
+      setEmailError("Can't be empty");
+      hasError = true;
+    } else {
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setEmailError("Invalid email");
+        hasError = true;
+      }
     }
+
+    if (!password) {
+      setPasswordError("Can't be empty");
+      hasError = true;
+    }
+
+    if (hasError) return;
 
     login.mutate({ email, password });
   };
@@ -57,12 +83,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {error && (
-            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="text-xs text-[#333333] mb-1 block">
@@ -86,9 +106,20 @@ export default function LoginPage() {
                   type="email"
                   placeholder="e.g. alex@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-[#D9D9D9] pl-11 pr-4 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] bg-[#FFFFFF]"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError("");
+                    setPasswordError("");
+                  }}
+                  className={`w-full rounded-lg border ${
+                    emailError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
+                  } pl-11 pr-36 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
                 />
+                {emailError && (
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                    {emailError}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -114,9 +145,20 @@ export default function LoginPage() {
                   type="password"
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-[#D9D9D9] pl-11 pr-4 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 focus:ring-[#633CFF] focus:border-[#633CFF] bg-[#FFFFFF]"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setEmailError("");
+                    setPasswordError("");
+                  }}
+                  className={`w-full rounded-lg border ${
+                    passwordError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
+                  } pl-11 pr-36 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
                 />
+                {passwordError && (
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
+                    {passwordError}
+                  </span>
+                )}
               </div>
             </div>
 
