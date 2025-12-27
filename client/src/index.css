@@ -18,6 +18,17 @@
   animation: fade-in 0.3s ease-out;
 }
 
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
 /* Phone preview positioning */
 #phone-preview-sticky {
   top: 112px !important;

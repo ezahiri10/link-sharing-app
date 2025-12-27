@@ -1,25 +1,21 @@
-import { Outlet, Link } from '@tanstack/react-router'
-import { trpc } from '../lib/trpc'
-import { useNavigate } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
+import { useAuth } from '../hooks/useAuth'
+import { LoadingScreen } from '../components/ui/LoadingScreen'
 
 export default function DashboardLayout() {
-  const navigate = useNavigate()
-  const logout = trpc.auth.logout.useMutation({
-    onSuccess: () => {
-      navigate({ to: '/login' })
-    },
-  })
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
+  if (!user) {
+    return null
+  }
 
   return (
     <div>
-      <nav>
-        <Link to="/dashboard/links">Links</Link>
-        <Link to="/dashboard/profile">Profile</Link>
-        <button onClick={() => logout.mutate()}>Logout</button>
-      </nav>
-      <main>
-        <Outlet />
-      </main>
+      <Outlet />
     </div>
   )
 }
