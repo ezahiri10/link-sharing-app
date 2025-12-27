@@ -1,12 +1,15 @@
-import { Router } from '@tanstack/react-router'
-import { rootRoute } from './root'
-import { loginRoute, registerRoute } from './auth'
-import { dashboardRoute } from './dashboard'
-import { linksRoute } from './links'
-import { profileRoute } from './profile'
+import { createRouter } from '@tanstack/react-router';
+import { rootRoute } from './root';
+import { indexRoute } from './index-route';
+import { loginRoute } from './login';
+import { registerRoute } from './register';
+import { dashboardRoute } from './dashboard';
+import { linksRoute } from './links';
+import { profileRoute } from './profile';
 import { previewRoute } from './preview';
 
 const routeTree = rootRoute.addChildren([
+  indexRoute,
   loginRoute,
   registerRoute,
   dashboardRoute.addChildren([
@@ -14,11 +17,15 @@ const routeTree = rootRoute.addChildren([
     profileRoute,
   ]),
   previewRoute,
-])
+]);
 
-export const router = new Router({
+export const router = createRouter({
   routeTree,
-  context: {
-    user: null, // will be set from auth query
-  },
-})
+  defaultPreload: 'intent',
+});
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}

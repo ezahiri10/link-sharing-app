@@ -1,13 +1,14 @@
-import { Route, redirect } from "@tanstack/react-router";
+import { createRoute, redirect } from "@tanstack/react-router";
 import { rootRoute } from "./root";
 import LoginPage from "../pages/LoginPage";
 
-export const loginRoute = new Route({
+export const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "login",
+  path: "/login",
   component: LoginPage,
-  beforeLoad: ({ context }) => {
-    if (context.user) {
+  beforeLoad: () => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
       throw redirect({ to: "/dashboard/links" });
     }
   },

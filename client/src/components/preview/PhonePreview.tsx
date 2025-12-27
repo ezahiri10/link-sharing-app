@@ -37,6 +37,12 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
     profile.imageUrl.trim() !== "" &&
     profile.imageUrl !== "https://via.placeholder.com/500";
 
+  const initials = displayName
+    .split(" ")
+    .map((name) => name.charAt(0))
+    .join("")
+    .toUpperCase();
+
   return (
     <div
       className="hidden lg:flex lg:col-span-2 justify-center sticky mt-8"
@@ -53,16 +59,22 @@ export function PhonePreview({ links, profile }: PhonePreviewProps) {
           {/* ---------- overlay ---------- */}
           <div className="absolute inset-0 flex flex-col items-center px-[35px] pt-[60px]">
             
-            {/* Avatar */}
-            {hasImage && (
-              <div className="w-24 h-24 rounded-full border-4 border-[#633CFF] bg-white overflow-hidden">
-                <img
-                  src={profile!.imageUrl}
-                  alt="Profile"
+            {/* Avatar - Only show if image exists, border only when image exists */}
+            {hasImage ? (
+              <div className="w-24 h-24 rounded-full border-4 border-primary overflow-hidden flex items-center justify-center bg-white flex-shrink-0">
+                <img 
+                  src={profile.imageUrl} 
+                  alt="Profile" 
                   className="w-full h-full object-cover"
                 />
               </div>
-            )}
+            ) : initials ? (
+              <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-primary-soft flex-shrink-0">
+                <span className="text-3xl font-semibold text-primary">
+                  {initials}
+                </span>
+              </div>
+            ) : null}
 
             {/* Name */}
             <div className={`${hasImage ? "mt-6" : "mt-16"} h-[28px] max-w-[237px]`}>

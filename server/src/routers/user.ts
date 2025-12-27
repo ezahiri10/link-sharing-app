@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { uploadToCloudinary, deleteFromCloudinary } from '../lib/cloudinary.js';
 
 export const userRouter = router({
@@ -10,6 +10,17 @@ export const userRouter = router({
     );
     return result.rows[0] || null;
   }),
+
+  // PUBLIC ROUTE - for preview page
+  getUserById: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db.query(
+        'SELECT id, first_name, last_name, profile_email, image FROM users WHERE id = $1',
+        [input.userId]
+      );
+      return result.rows[0] || null;
+    }),
 
   updateProfile: protectedProcedure
     .input(

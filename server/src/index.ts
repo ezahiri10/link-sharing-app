@@ -40,16 +40,14 @@ app.use(
   })
 );
 
-// Catch-all for debugging
-app.use('*', (req, res) => {
-  console.log('❌ Unhandled route:', req.method, req.originalUrl);
-  res.status(404).json({ 
-    error: 'Not found', 
-    path: req.originalUrl,
-    message: 'This endpoint does not exist. tRPC endpoints should go to /trpc/*'
-  });
-});
+// Serve static files from client (for production)
+// Remove or comment out if causing issues in development
+// app.use(express.static('public'));
+
+// DO NOT add catch-all in development
+// The client dev server handles all routes
 
 app.listen(port, () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
+  console.log(`📡 tRPC endpoint: http://localhost:${port}/trpc`);
 });

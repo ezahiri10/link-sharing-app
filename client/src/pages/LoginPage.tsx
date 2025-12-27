@@ -3,6 +3,8 @@ import { trpc } from "../lib/trpc";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 export default function LoginPage() {
+  console.log('✅ LoginPage rendering');
+  
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +60,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-bg-light flex flex-col items-center justify-center p-4">
+      {console.log('✅ LoginPage return rendering')}
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-12">

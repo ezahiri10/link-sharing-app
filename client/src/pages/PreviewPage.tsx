@@ -9,9 +9,11 @@ export default function PreviewPage() {
   const { userId } = useParams({ from: "/preview/$userId" });
   const [showToast, setShowToast] = useState(false);
 
-  const { data: user } = trpc.user.me.useQuery(undefined, {
-    enabled: !!userId,
-  });
+  // Fetch user data by userId from URL (not current logged-in user)
+  const { data: user } = trpc.user.getUserById.useQuery(
+    { userId },
+    { enabled: !!userId }
+  );
 
   const { data: links = [] } = trpc.links.getByUserId.useQuery(
     { userId },
@@ -28,6 +30,14 @@ export default function PreviewPage() {
       console.error("Failed to copy:", error);
     }
   };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-bg-light flex items-center justify-center">
+        <p className="text-text-gray">Loading preview...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -56,10 +66,10 @@ export default function PreviewPage() {
         {/* Preview card - overlapping purple background */}
         <div className="relative -mt-[200px] sm:-mt-[240px] px-4 pb-12">
           <PreviewCard
-            firstName={user?.first_name}
-            lastName={user?.last_name}
-            email={user?.profile_email}
-            imageUrl={user?.image}
+            firstName={user.first_name}
+            lastName={user.last_name}
+            email={user.profile_email}
+            imageUrl={user.image}
             links={links}
           />
         </div>

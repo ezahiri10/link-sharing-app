@@ -1,28 +1,25 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { httpBatchLink } from '@trpc/client'
-import { trpc } from './lib/trpc'
-import { RouterProvider } from '@tanstack/react-router'
-import { router } from './router'
-import './index.css'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { httpBatchLink } from '@trpc/client';
+import { trpc } from './lib/trpc';
+import { RouterProvider } from '@tanstack/react-router';
+import { router } from './router';
+import './index.css';
 
-// Get session from localStorage
 function getSessionId() {
-  return localStorage.getItem('sessionId') || undefined
+  return localStorage.getItem('sessionId') || undefined;
 }
 
-// Create query client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5,
       retry: 1,
     },
   },
-})
+});
 
-// Create tRPC client
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
@@ -33,15 +30,9 @@ const trpcClient = trpc.createClient({
           authorization: sessionId ? `Bearer ${sessionId}` : '',
         };
       },
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: 'include',
-        });
-      },
     }),
   ],
-})
+});
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -50,5 +41,5 @@ createRoot(document.getElementById('root')!).render(
         <RouterProvider router={router} />
       </QueryClientProvider>
     </trpc.Provider>
-  </StrictMode>,
-)
+  </StrictMode>
+);
