@@ -72,7 +72,6 @@ export default function ProfilePage() {
           </div>
           <div className="lg:col-span-3 bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-border-default">
             <ProfileForm
-              user={user}
               firstName={profile.firstName}
               lastName={profile.lastName}
               email={profile.email}

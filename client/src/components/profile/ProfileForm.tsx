@@ -4,16 +4,10 @@ import { ProfileInputs } from "./ProfileInputs";
 import { Button } from "../ui/Button";
 
 interface ProfileFormProps {
-  user: {
-    first_name?: string;
-    last_name?: string;
-    email?: string;
-    avatar_url?: string;
-  };
   firstName: string;
   lastName: string;
   email: string;
-  avatarPreview: string;
+  avatarPreview?: string;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
@@ -23,8 +17,7 @@ interface ProfileFormProps {
   hasChanges: boolean;
 }
 
-export function ProfileForm({ 
-  user,
+export function ProfileForm({
   firstName,
   lastName,
   email,
@@ -35,7 +28,7 @@ export function ProfileForm({
   onImageChange,
   onSubmit,
   isPending,
-  hasChanges
+  hasChanges,
 }: ProfileFormProps) {
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string }>({});
 

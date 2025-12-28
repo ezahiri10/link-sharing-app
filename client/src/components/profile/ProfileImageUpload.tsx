@@ -31,8 +31,8 @@ export function ProfileImageUpload({ imageUrl, onImageChange }: ProfileImageUplo
 
   return (
     <Card>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-        <div className="text-xs text-[#333333] sm:w-[240px] flex-shrink-0">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+        <div className="text-xs text-[#737373] sm:w-[200px] flex-shrink-0 font-semibold ">
           Profile picture
         </div>
         
