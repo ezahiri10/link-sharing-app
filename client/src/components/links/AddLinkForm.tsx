@@ -87,16 +87,18 @@ export function AddLinkForm({ linkNumber, onSubmit, onCancel, isPending }: AddLi
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
             <input
-              type="text"
-              placeholder="e.g. https://www.github.com/johnappleseed"
+              type="url"
+              placeholder="e.g. https://github.com/username"
               value={url}
               onChange={(e) => {
                 setUrl(e.target.value);
                 setUrlError("");
               }}
-              className={`w-full rounded-lg border ${
-                urlError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939] text-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF] text-[#333333]"
-              } pl-11 pr-28 py-3 text-sm placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
+              className={`w-full rounded-md border focus:shadow-[2px_2px_10px_3px_#BEADFF]  ${
+                urlError
+                  ? "border-error focus:shadow-focus"
+                  : "border-border-default  focus:border-primary"
+              } pl-10 pr-4 py-3 text-sm font-regular text-text-dark placeholder:text-text-gray focus:outline-none transition-all bg-white`}
             />
             {urlError && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">

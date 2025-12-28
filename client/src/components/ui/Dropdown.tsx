@@ -85,19 +85,21 @@ export function Dropdown({
           w-full h-12 px-4 rounded-md
           flex items-center justify-between
           text-sm font-regular
-          transition-colors
+          transition-all
+          focus:shadow-[2px_2px_10px_3px_#BEADFF]
+          shadow-sm hover:shadow-md
           ${disabled 
             ? 'bg-bg-light border border-border-default text-text-gray cursor-not-allowed' 
             : error
-              ? 'bg-white border border-error shadow-focus'
+              ? 'bg-white border border-error focus:shadow-focus'
               : isOpen
-                ? 'bg-white border border-primary shadow-focus'
+                ? 'bg-white border border-primary focus:shadow-focus'
                 : 'bg-white border border-border-default hover:border-primary'
           }
         `}
       >
         {/* Left side: Icon + Text */}
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="flex items-center gap-3 min-w-0 flex-1 ">
           {selectedOption?.icon && (
             <img
               src={selectedOption.icon}

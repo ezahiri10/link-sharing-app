@@ -24,11 +24,10 @@ export function ProfileInputs({
   errors,
 }: ProfileInputsProps) {
   return (
-    <Card className="space-y-3">
+    <Card className="space-y-4">
       <div className="grid sm:grid-cols-[240px_1fr] gap-3 sm:gap-4 items-start">
-        <label className="text-xs text-[#737373] sm:pt-3">First name*</label>
+        <label className="text-xs text-text-gray sm:pt-3">First name*</label>
         <Input
-          label=""
           value={firstName}
           onChange={onFirstNameChange}
           placeholder="e.g. John"
@@ -37,9 +36,8 @@ export function ProfileInputs({
       </div>
 
       <div className="grid sm:grid-cols-[240px_1fr] gap-3 sm:gap-4 items-start">
-        <label className="text-xs text-[#737373] sm:pt-3">Last name*</label>
+        <label className="text-xs text-text-gray sm:pt-3">Last name*</label>
         <Input
-          label=""
           value={lastName}
           onChange={onLastNameChange}
           placeholder="e.g. Appleseed"
@@ -48,13 +46,12 @@ export function ProfileInputs({
       </div>
 
       <div className="grid sm:grid-cols-[240px_1fr] gap-3 sm:gap-4 items-start">
-        <label className="text-xs text-[#737373] sm:pt-3">Email</label>
+        <label className="text-xs text-text-gray sm:pt-3">Email</label>
         <Input
-          label=""
+          type="email"
           value={email}
           onChange={onEmailChange}
           placeholder="e.g. email@example.com"
-          type="email"
         />
       </div>
     </Card>

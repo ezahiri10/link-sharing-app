@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getPlatformInfo } from "../../constants/platforms";
 import { Dropdown } from "../ui/Dropdown";
+import { Input } from "../ui/Input";
 
 interface LinkItemProps {
   link: {
@@ -123,47 +124,22 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
             onChange={setEditPlatform}
           />
 
-          <div>
-            <label className="text-xs font-regular text-text-dark mb-1 block">
-              Link
-            </label>
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-gray pointer-events-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                />
+          <Input
+            label="Link"
+            type="url"
+            value={editUrl}
+            onChange={(value) => {
+              setEditUrl(value);
+              setUrlError("");
+            }}
+            placeholder="e.g. https://github.com/username"
+            error={urlError}
+            icon={
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
-              <input
-                type="url"
-                placeholder="e.g. https://github.com/username"
-                value={editUrl}
-                onChange={(e) => {
-                  setEditUrl(e.target.value);
-                  setUrlError("");
-                }}
-                onBlur={handleUrlBlur}
-                onKeyDown={handleKeyDown}
-                className={`w-full rounded-md border ${
-                  urlError
-                    ? "border-error shadow-focus"
-                    : "border-border-default focus:shadow-focus focus:border-primary"
-                } pl-10 pr-4 py-3 text-sm font-regular text-text-dark placeholder:text-text-gray focus:outline-none transition-all bg-white`}
-              />
-              {urlError && (
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-error">
-                  {urlError}
-                </span>
-              )}
-            </div>
-          </div>
+            }
+          />
 
           <div className="flex gap-2 justify-end pt-2">
             <button

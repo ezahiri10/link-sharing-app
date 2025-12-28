@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "../lib/trpc";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Input } from "../components/ui/Input";
 
 export default function LoginPage() {
   console.log('✅ LoginPage rendering');
@@ -71,115 +72,70 @@ export default function LoginPage() {
               alt="devlinks"
               className="w-10 h-10"
             />
-            <span className="text-2xl font-bold text-[#333333]">devlinks</span>
+            <span className="text-2xl font-bold text-text-dark">devlinks</span>
           </div>
         </div>
 
         {/* Login Card */}
         <div className="bg-white rounded-xl p-8 sm:p-10 shadow-sm">
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#333333] mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-dark mb-2">
               Login
             </h1>
-            <p className="text-sm text-[#737373]">
+            <p className="text-sm text-text-gray">
               Add your details below to get back into the app
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="text-xs text-[#333333] mb-1 block">
-                Email address
-              </label>
-              <div className="relative">
-                <svg
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
+            <Input
+              label="Email address"
+              type="email"
+              value={email}
+              onChange={(value) => {
+                setEmail(value);
+                setEmailError("");
+                setPasswordError("");
+              }}
+              placeholder="e.g. alex@email.com"
+              error={emailError}
+              icon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <input
-                  type="email"
-                  placeholder="e.g. alex@email.com"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setEmailError("");
-                    setPasswordError("");
-                  }}
-                  className={`w-full rounded-lg border ${
-                    emailError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
-                  } pl-11 pr-36 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
-                />
-                {emailError && (
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
-                    {emailError}
-                  </span>
-                )}
-              </div>
-            </div>
+              }
+            />
 
-            <div>
-              <label className="text-xs text-[#333333] mb-1 block">
-                Password
-              </label>
-              <div className="relative">
-                <svg
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
+            <Input
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(value) => {
+                setPassword(value);
+                setEmailError("");
+                setPasswordError("");
+              }}
+              placeholder="Enter your password"
+              error={passwordError}
+              icon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setEmailError("");
-                    setPasswordError("");
-                  }}
-                  className={`w-full rounded-lg border ${
-                    passwordError ? "border-[#FF3939] focus:ring-[#FF3939] focus:border-[#FF3939]" : "border-[#D9D9D9] focus:ring-[#633CFF] focus:border-[#633CFF]"
-                  } pl-11 pr-36 py-3 text-sm text-[#333333] placeholder:text-[#737373] focus:outline-none focus:ring-1 bg-[#FFFFFF]`}
-                />
-                {passwordError && (
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FF3939]">
-                    {passwordError}
-                  </span>
-                )}
-              </div>
-            </div>
+              }
+            />
 
             <button
               type="submit"
               disabled={login.isPending}
-              className="w-full bg-[#633CFF] text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {login.isPending ? "Logging in..." : "Login"}
             </button>
           </form>
 
-          <p className="text-center text-sm text-[#737373] mt-6">
+          <p className="text-center text-sm text-text-gray mt-6">
             Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="text-[#633CFF] hover:underline font-semibold"
-            >
+            <Link to="/register" className="text-primary hover:underline font-semibold">
               Create account
             </Link>
           </p>
