@@ -61,7 +61,7 @@ export default function LinksPage() {
               <button
                 onClick={() => setShowForm(true)}
                 disabled={showForm}
-                className="w-full bg-white border border-primary text-primary py-2 sm:py-2.5 lg:py-3 rounded-md lg:rounded-lg text-xs lg:text-sm font-semibold hover:bg-primary-soft transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-white border border-primary text-primary py-2 sm:py-2.5 lg:py-3 rounded-md lg:rounded-lg text-xs lg:text-sm font-semibold hover:bg-primary-soft transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
               >
                 + Add new link
               </button>

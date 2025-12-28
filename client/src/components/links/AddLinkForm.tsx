@@ -108,15 +108,18 @@ export function AddLinkForm({ linkNumber, onSubmit, onCancel, isPending }: AddLi
           </div>
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex-1 border border-primary text-primary py-2 rounded-md text-sm font-semibold hover:bg-primary-soft transition-all focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
             disabled={isPending}
-            className={`px-6 py-3 rounded-lg font-semibold text-sm transition ${
-              isPending
-                ? "bg-[#EFEBFF] text-[#633CFF] cursor-not-allowed opacity-50"
-                : "bg-[#633CFF] text-white hover:opacity-90"
-            }`}
+            className="flex-1 bg-primary text-white py-2 rounded-md text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-all focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
           >
             {isPending ? "Saving..." : "Save"}
           </button>

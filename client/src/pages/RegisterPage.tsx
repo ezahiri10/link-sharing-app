@@ -153,12 +153,12 @@ export default function RegisterPage() {
 
           {/* Button */}
           <button
-            type="submit"
-            disabled={register.isPending}
-            className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {register.isPending ? 'Creating account…' : 'Create new account'}
-          </button>
+              type="submit"
+              disabled={register.isPending}
+              className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
+            >
+              {register.isPending ? 'Creating account…' : 'Create new account'}
+            </button>
         </form>
 
         {/* Footer */}

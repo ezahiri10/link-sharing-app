@@ -45,8 +45,7 @@ export function Input({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={`
-      
-            w-full rounded-lg border bg-white focus:shadow-[2px_2px_10px_3px_#BEADFF]
+            w-full rounded-lg border bg-white
             text-sm font-normal text-dark-text placeholder:text-gray-text
             transition-all duration-150
             ${icon ? "pl-11" : "pl-4"}
@@ -56,12 +55,11 @@ export function Input({
             ${
               error
                 ? "border-error focus:border-error"
-                : "border-border-gray focus:border-primary"
+                : "border-border-gray focus:border-primary focus:shadow-[2px_2px_10px_3px_#BEADFF]"
             }
 
             focus:outline-none
-            focus:shadow-[#633CFF_0px_0px_0px_1px]
-
+            ${!error ? "focus:shadow-[#633CFF_0px_0px_0px_1px]" : ""}
           `}
         />
 

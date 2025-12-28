@@ -15,11 +15,11 @@ export function Button({
   variant = "primary",
   fullWidth 
 }: ButtonProps) {
-  const baseClasses = "px-6 py-3 rounded-md font-semibold text-sm transition-opacity";
+  const baseClasses = "px-6 py-3 rounded-md font-semibold text-sm transition-all focus:outline-none";
   
   const variantClasses = variant === "primary"
-    ? "bg-primary text-white hover:opacity-90 disabled:opacity-50"
-    : "bg-white border border-primary text-primary hover:bg-primary-soft";
+    ? "bg-primary text-white hover:opacity-90 disabled:opacity-50 focus:shadow-[2px_2px_10px_3px_#BEADFF]"
+    : "bg-white border border-primary text-primary hover:bg-primary-soft focus:shadow-[2px_2px_10px_3px_#BEADFF]";
   
   const widthClass = fullWidth ? "w-full" : "";
 

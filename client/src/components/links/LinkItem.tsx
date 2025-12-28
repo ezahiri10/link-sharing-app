@@ -109,7 +109,7 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
         <button
           onClick={() => onDelete(link.id)}
           disabled={isDeleting}
-          className="text-text-gray hover:text-error text-sm font-regular transition disabled:opacity-50"
+          className="text-text-gray hover:text-error text-sm font-regular transition-all disabled:opacity-50 focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
         >
           Remove
         </button>
@@ -145,7 +145,7 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
             <button
               type="button"
               onClick={handleCancel}
-              className="px-4 py-2 rounded-md border border-border-default text-text-gray text-sm font-semibold hover:bg-bg-light transition"
+              className="px-4 py-2 rounded-md border border-border-default text-text-gray text-sm font-semibold hover:bg-bg-light transition-all focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
             >
               Cancel
             </button>
@@ -153,7 +153,7 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
               type="button"
               onClick={handleSave}
               disabled={isUpdating}
-              className="px-4 py-2 rounded-md bg-primary text-white text-sm font-semibold hover:opacity-90 transition disabled:opacity-50"
+              className="px-4 py-2 rounded-md bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50 focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
             >
               {isUpdating ? "Saving..." : "Save"}
             </button>

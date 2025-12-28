@@ -101,7 +101,7 @@ export function ProfileForm({
         />
       </div>
 
-      <div className="mt-6 pt-6 border-t border-[#D9D9D9] flex justify-end">
+      <div className="mt-6 pt-6 border-t border-border-default flex justify-end">
         <div className="w-full sm:w-auto">
           <Button
             type="submit"
