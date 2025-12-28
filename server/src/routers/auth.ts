@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc.js';
+import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 
@@ -20,7 +21,10 @@ export const authRouter = router({
       );
 
       if (existing.rows.length > 0) {
-        throw new Error('Email already registered');
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'Email already registered',
+        });
       }
 
       const passwordHash = await bcrypt.hash(password, 10);
@@ -58,14 +62,20 @@ export const authRouter = router({
       );
 
       if (result.rows.length === 0) {
-        throw new Error('Invalid credentials');
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Invalid credentials',
+        });
       }
 
       const user = result.rows[0];
       const isValid = await bcrypt.compare(password, user.password_hash);
 
       if (!isValid) {
-        throw new Error('Invalid credentials');
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Invalid credentials',
+        });
       }
 
       const sessionId = randomUUID();
