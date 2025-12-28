@@ -1,14 +1,13 @@
-import { useState } from 'react'
-import { trpc } from '../lib/trpc'
-import { useNavigate, Link } from '@tanstack/react-router'
-import { Input } from '../components/ui/Input'
+import { useState } from 'react';
+import { trpc } from '../lib/trpc';
+import { useNavigate, Link } from '@tanstack/react-router';
+import { Input } from '../components/ui/Input';
 
 export default function RegisterPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -19,22 +18,16 @@ export default function RegisterPage() {
       navigate({ to: "/dashboard/links" });
     },
     onError: (error: any) => {
-      console.error("Registration error:", error);
-      
-      // Check for specific error messages
       if (error.message?.includes("Invalid email") || error.data?.zodError) {
         setEmailError("Invalid email");
       } else if (error.message?.includes("Email already registered")) {
         setEmailError("Email already registered");
-      } else {
-        setError(error.message || "Registration failed. Please try again.");
       }
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setEmailError("");
     setPasswordError("");
     setConfirmPasswordError("");
@@ -45,7 +38,6 @@ export default function RegisterPage() {
       setEmailError("Can't be empty");
       hasError = true;
     } else {
-      // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         setEmailError("Invalid email");
@@ -72,26 +64,18 @@ export default function RegisterPage() {
     if (hasError) return;
 
     register.mutate({ email, password });
-  }
+  };
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col items-center justify-center px-4 py-8">
-      
       <div className="mb-8 text-center">
-        <img 
-          src="/assets/images/logo-devlinks-large.svg" 
-          alt="devlinks"
-          className="h-10 mx-auto"
-        />
+        <img src="/assets/images/logo-devlinks-large.svg" alt="devlinks" className="h-10 mx-auto" />
       </div>
 
-      {/* Card */}
       <div className="w-full max-w-md border border-gray-200 rounded-xl p-6">
         <div className="mb-6">
           <h2 className="text-2xl sm:text-3xl font-bold text-text-dark mb-2">Create account</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Let's get you started sharing your links!
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Let's get you started sharing your links!</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -101,7 +85,6 @@ export default function RegisterPage() {
             value={email}
             onChange={(value) => {
               setEmail(value);
-              setError("");
               setEmailError("");
             }}
             placeholder="e.g. alex@email.com"
@@ -119,7 +102,6 @@ export default function RegisterPage() {
             value={password}
             onChange={(value) => {
               setPassword(value);
-              setError("");
               setPasswordError("");
             }}
             placeholder="At least 8 characters"
@@ -137,7 +119,6 @@ export default function RegisterPage() {
             value={confirmPassword}
             onChange={(value) => {
               setConfirmPassword(value);
-              setError("");
               setConfirmPasswordError("");
             }}
             placeholder="Confirm password"
@@ -149,28 +130,20 @@ export default function RegisterPage() {
             }
           />
 
-          {error && email && password && confirmPassword && (
-            <p className="text-xs text-error">{error}</p>
-          )}
-
-          {/* Button */}
           <button
-              type="submit"
-              disabled={register.isPending}
-              className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
-            >
-              {register.isPending ? 'Creating account…' : 'Create new account'}
-            </button>
+            type="submit"
+            disabled={register.isPending}
+            className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
+          >
+            {register.isPending ? 'Creating account…' : 'Create new account'}
+          </button>
         </form>
 
-        {/* Footer */}
         <p className="mt-6 text-center text-sm text-gray-500">
           Already have an account?{' '}
-          <Link to="/login" className="text-purple-600 font-medium hover:underline">
-            Login
-          </Link>
+          <Link to="/login" className="text-purple-600 font-medium hover:underline">Login</Link>
         </p>
       </div>
     </div>
-  )
+  );
 }

@@ -56,7 +56,6 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
   };
 
   const handleSave = () => {
-    // Validate URL
     if (!editUrl.trim()) {
       setUrlError("Can't be empty");
       return;
@@ -69,7 +68,6 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
       return;
     }
 
-    // Only update if something changed
     if (editPlatform !== link.platform || editUrl !== link.url) {
       onUpdate(link.id, editPlatform, editUrl);
     }
@@ -78,14 +76,12 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
     setUrlError("");
   };
 
-  // Handle blur on URL input to auto-save
   const handleUrlBlur = () => {
     if (editUrl !== link.url && editUrl.trim()) {
       handleSave();
     }
   };
 
-  // Handle Enter key to save
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -102,9 +98,7 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
           <svg width="12" height="6" viewBox="0 0 12 6" className="text-text-gray">
             <path fill="currentColor" d="M0 0h12v1H0zM0 5h12v1H0z"/>
           </svg>
-          <span className="text-sm font-semibold text-text-gray">
-            Link #{index + 1}
-          </span>
+          <span className="text-sm font-semibold text-text-gray">Link #{index + 1}</span>
         </div>
         <button
           onClick={() => onDelete(link.id)}
@@ -117,12 +111,7 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
 
       {isEditing ? (
         <div className="space-y-3">
-          <Dropdown
-            label="Platform"
-            value={editPlatform}
-            options={PLATFORMS}
-            onChange={setEditPlatform}
-          />
+          <Dropdown label="Platform" value={editPlatform} options={PLATFORMS} onChange={setEditPlatform} />
 
           <Input
             label="Link"
@@ -160,18 +149,11 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
           </div>
         </div>
       ) : (
-        <div 
-          onClick={handleEdit}
-          className="flex items-center justify-between cursor-pointer hover:bg-white p-3 rounded-md transition"
-        >
+        <div onClick={handleEdit} className="flex items-center justify-between cursor-pointer hover:bg-white p-3 rounded-md transition">
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            {platformInfo.icon && (
-              <img src={platformInfo.icon} alt="" className="w-4 h-4 flex-shrink-0" />
-            )}
+            {platformInfo.icon && <img src={platformInfo.icon} alt="" className="w-4 h-4 flex-shrink-0" />}
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-text-dark truncate">
-                {platformInfo.label}
-              </p>
+              <p className="text-sm font-semibold text-text-dark truncate">{platformInfo.label}</p>
               <p className="text-xs text-text-gray truncate">{link.url}</p>
             </div>
           </div>

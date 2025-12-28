@@ -20,7 +20,6 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const { links } = useLinks();
   const [showToast, setShowToast] = useState(false);
-  
   const profile = useProfile(user);
 
   const handleImageChange = (file: File, preview: string) => {
@@ -30,7 +29,6 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     let avatarBase64: string | undefined;
     
     if (profile.avatarFile) {
@@ -91,10 +89,7 @@ export default function ProfilePage() {
         </div>
       </main>
 
-      <Toast
-        message="Your changes have been successfully saved!"
-        visible={showToast}
-      />
+      <Toast message="Your changes have been successfully saved!" visible={showToast} />
     </div>
   );
 }

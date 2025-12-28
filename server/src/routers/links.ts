@@ -30,7 +30,6 @@ export const linksRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { platform, url } = input;
 
-      // Get max display order
       const maxOrder = await ctx.db.query(
         'SELECT COALESCE(MAX(display_order), -1) as max FROM links WHERE user_id = $1',
         [ctx.user.user_id]
