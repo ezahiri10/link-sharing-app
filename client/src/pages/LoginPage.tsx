@@ -19,7 +19,7 @@ export default function LoginPage() {
     },
     onError: (error: any) => {
       console.error("Login error:", error);
-
+      
       // Check for validation errors
       if (error.message?.includes("Invalid email") || error.data?.zodError) {
         setEmailError("Invalid email");

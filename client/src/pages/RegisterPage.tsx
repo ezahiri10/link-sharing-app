@@ -21,9 +21,11 @@ export default function RegisterPage() {
     onError: (error: any) => {
       console.error("Registration error:", error);
       
-      // Check for validation errors
+      // Check for specific error messages
       if (error.message?.includes("Invalid email") || error.data?.zodError) {
         setEmailError("Invalid email");
+      } else if (error.message?.includes("Email already registered")) {
+        setEmailError("Email already registered");
       } else {
         setError(error.message || "Registration failed. Please try again.");
       }
