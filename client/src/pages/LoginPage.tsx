@@ -16,12 +16,8 @@ export default function LoginPage() {
       navigate({ to: "/dashboard/links" });
     },
     onError: (error: any) => {
-      if (error.message?.includes("Invalid email") || error.data?.zodError) {
-        setEmailError("Invalid email");
-      } else {
-        setEmailError("Invalid credentials");
-        setPasswordError("Invalid credentials");
-      }
+      setEmailError("Invalid credentials");
+      setPasswordError("Invalid credentials");
     },
   });
 
