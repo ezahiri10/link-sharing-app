@@ -5,7 +5,7 @@ export const linksRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const result = await ctx.db.query(
       'SELECT id, platform, url, display_order FROM links WHERE user_id = $1 ORDER BY display_order ASC',
-      [ctx.user.user_id]
+      [ctx.user.id]
     );
     return result.rows;
   }),
@@ -32,14 +32,14 @@ export const linksRouter = router({
 
       const maxOrder = await ctx.db.query(
         'SELECT COALESCE(MAX(display_order), -1) as max FROM links WHERE user_id = $1',
-        [ctx.user.user_id]
+        [ctx.user.id]
       );
 
       const displayOrder = maxOrder.rows[0].max + 1;
 
       const result = await ctx.db.query(
         'INSERT INTO links (user_id, platform, url, display_order) VALUES ($1, $2, $3, $4) RETURNING id, platform, url, display_order',
-        [ctx.user.user_id, platform, url, displayOrder]
+        [ctx.user.id, platform, url, displayOrder]
       );
 
       return result.rows[0];
@@ -58,7 +58,7 @@ export const linksRouter = router({
 
       const result = await ctx.db.query(
         'UPDATE links SET platform = $1, url = $2 WHERE id = $3 AND user_id = $4 RETURNING id, platform, url, display_order',
-        [platform, url, id, ctx.user.user_id]
+        [platform, url, id, ctx.user.id]
       );
 
       if (result.rows.length === 0) {
@@ -73,7 +73,7 @@ export const linksRouter = router({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.query(
         'DELETE FROM links WHERE id = $1 AND user_id = $2',
-        [input.id, ctx.user.user_id]
+        [input.id, ctx.user.id]
       );
 
       return { success: true };

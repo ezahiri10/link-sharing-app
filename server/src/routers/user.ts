@@ -5,8 +5,8 @@ import { uploadToCloudinary, deleteFromCloudinary } from '../lib/cloudinary.js';
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
     const result = await ctx.db.query(
-      'SELECT id, email, first_name, last_name, profile_email, image FROM users WHERE id = $1',
-      [ctx.user.user_id]
+      'SELECT id, email, first_name, last_name, image FROM users WHERE id = $1',
+      [ctx.user.id]
     );
     return result.rows[0] || null;
   }),
@@ -15,7 +15,7 @@ export const userRouter = router({
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const result = await ctx.db.query(
-        'SELECT id, first_name, last_name, profile_email, image FROM users WHERE id = $1',
+        'SELECT id, first_name, last_name, image FROM users WHERE id = $1',
         [input.userId]
       );
       return result.rows[0] || null;
@@ -31,13 +31,13 @@ export const userRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { firstName, lastName, email, avatarBase64 } = input;
+      const { firstName, lastName, avatarBase64 } = input;
       let imageUrl: string | undefined;
 
       if (avatarBase64) {
         const currentUser = await ctx.db.query(
           'SELECT image FROM users WHERE id = $1',
-          [ctx.user.user_id]
+          [ctx.user.id]
         );
 
         if (currentUser.rows[0]?.image && currentUser.rows[0].image !== 'https://via.placeholder.com/500') {
@@ -47,14 +47,13 @@ export const userRouter = router({
         imageUrl = await uploadToCloudinary(avatarBase64);
       }
 
-      const profileEmail = email.trim() || null;
       const updateQuery = imageUrl
-        ? 'UPDATE users SET first_name = $1, last_name = $2, profile_email = $3, image = $4 WHERE id = $5 RETURNING id, email, first_name, last_name, profile_email, image'
-        : 'UPDATE users SET first_name = $1, last_name = $2, profile_email = $3 WHERE id = $4 RETURNING id, email, first_name, last_name, profile_email, image';
+        ? 'UPDATE users SET first_name = $1, last_name = $2, image = $3 WHERE id = $4 RETURNING id, email, first_name, last_name, image'
+        : 'UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 RETURNING id, email, first_name, last_name, image';
 
       const values = imageUrl
-        ? [firstName, lastName, profileEmail, imageUrl, ctx.user.user_id]
-        : [firstName, lastName, profileEmail, ctx.user.user_id];
+        ? [firstName, lastName, imageUrl, ctx.user.id]
+        : [firstName, lastName, ctx.user.id];
 
       const result = await ctx.db.query(updateQuery, values);
       return result.rows[0];

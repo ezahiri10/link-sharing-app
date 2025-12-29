@@ -1,12 +1,6 @@
 import { z } from 'zod'
 import { router, publicProcedure } from './trpc.js'
-import { 
-  hashPassword, 
-  comparePassword, 
-  generateUserId, 
-  createSession, 
-  deleteSession 
-} from '../lib/auth.js'
+import { auth } from '../auth/better-auth.js'
 import { TRPCError } from '@trpc/server'
 
 export const authRouter = router({
@@ -19,34 +13,49 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const existingUser = await ctx.db.query(
-        'SELECT id FROM users WHERE email = $1',
-        [input.email]
-      )
+      try {
+        const { email, password, name } = input
 
-      if (existingUser.rows.length > 0) {
+        const result = await auth.api.signUpEmail({
+          body: {
+            email,
+            password,
+            name: name || email.split('@')[0],
+          },
+        })
+
+        if (!result) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Registration failed',
+          })
+        }
+
+        await ctx.db.query(
+          'UPDATE "user" SET first_name = $1 WHERE id = $2',
+          [name || email.split('@')[0], result.user.id]
+        )
+
+        return { 
+          user: {
+            id: result.user.id,
+            email: result.user.email,
+            first_name: name || email.split('@')[0],
+            image: result.user.image,
+          }
+        }
+      } catch (error: any) {
+        if (error.message?.includes('already exists') || error.message?.includes('duplicate')) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'User already exists. Use another email.',
+          })
+        }
         throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'User already exists. Use another email.',
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message || 'Registration failed',
         })
       }
-
-      const passwordHash = await hashPassword(input.password)
-      const userId = generateUserId()
-
-      const result = await ctx.db.query(
-        'INSERT INTO users (id, email, password_hash, first_name) VALUES ($1, $2, $3, $4) RETURNING id, email, first_name, last_name, image, created_at',
-        [userId, input.email, passwordHash, input.name || input.email.split('@')[0]]
-      )
-
-      const sessionId = await createSession(userId)
-
-      ctx.res.setHeader(
-        'Set-Cookie',
-        `session_id=${sessionId}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax`
-      )
-
-      return { user: result.rows[0], session: sessionId }
     }),
 
   login: publicProcedure
@@ -57,61 +66,55 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const result = await ctx.db.query(
-        'SELECT * FROM users WHERE email = $1',
-        [input.email]
-      )
+      try {
+        const result = await auth.api.signInEmail({
+          body: {
+            email: input.email,
+            password: input.password,
+          },
+          headers: ctx.req.headers,
+        })
 
-      const user = result.rows[0]
+        if (!result) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'Invalid email or password',
+          })
+        }
 
-      if (!user) {
+        const userDetails = await ctx.db.query(
+          'SELECT id, email, first_name, last_name, profile_email, image FROM "user" WHERE id = $1',
+          [result.user.id]
+        )
+
+        const user = userDetails.rows[0]
+
+        return {
+          user: {
+            id: user.id,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            image: user.image,
+          },
+        }
+      } catch (error: any) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: 'Invalid email or password',
         })
-      }
-
-      const isValid = await comparePassword(input.password, user.password_hash)
-
-      if (!isValid) {
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'Invalid email or password',
-        })
-      }
-
-      const sessionId = await createSession(user.id)
-
-      ctx.res.setHeader(
-        'Set-Cookie',
-        `session_id=${sessionId}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax`
-      )
-
-      return {
-        user: {
-          id: user.id,
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          image: user.image,
-          created_at: user.created_at,
-        },
-        session: sessionId,
       }
     }),
 
   logout: publicProcedure.mutation(async ({ ctx }) => {
-    const sessionId = ctx.req.headers.cookie?.split('session_id=')[1]?.split(';')[0]
+    try {
+      await auth.api.signOut({
+        headers: ctx.req.headers,
+      })
 
-    if (sessionId) {
-      await deleteSession(sessionId)
+      return { success: true }
+    } catch (error) {
+      return { success: false }
     }
-
-    ctx.res.setHeader(
-      'Set-Cookie',
-      'session_id=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax'
-    )
-
-    return { success: true }
   }),
 })
