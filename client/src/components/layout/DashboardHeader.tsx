@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { trpc } from "../../lib/trpc";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DashboardHeaderProps {
   userId?: number;
@@ -6,9 +8,24 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const logoutMutation = trpc.auth.logout.useMutation();
+
   const handlePreview = () => {
     if (userId) {
       window.open(`/preview/${userId}`, "_blank");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      queryClient.clear();
+      localStorage.removeItem('sessionId');
+      navigate({ to: "/login" });
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
 
@@ -48,6 +65,10 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
             </svg>
             <span className="hidden sm:inline text-sm font-semibold whitespace-nowrap">Preview</span>
           </button>
+
+          <button onClick={handleLogout} className="flex items-center gap-1 bg-white border border-[#737373] text-[#737373] px-1.5 sm:px-2 py-1.5 sm:py-2 rounded-md hover:bg-gray-100 active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 transition">
+            <span className="text-sm font-semibold whitespace-nowrap">Logout</span>
+          </button>
         </div>
 
         {/* Desktop */}
@@ -81,9 +102,15 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
             </Link>
           </nav>
 
-          <button onClick={handlePreview} className="flex items-center gap-1 bg-white border border-[#633CFF] text-[#633CFF] px-4 py-2 rounded-lg hover:bg-[#EFEBFF] active:bg-[#EFEBFF] disabled:border-[#D9D9D9] disabled:text-[#737373] disabled:cursor-not-allowed flex-shrink-0 transition">
-            <span className="text-sm font-semibold whitespace-nowrap">Preview</span>
-          </button>
+          <div className="flex gap-2">
+            <button onClick={handlePreview} className="flex items-center gap-1 bg-white border border-[#633CFF] text-[#633CFF] px-4 py-2 rounded-lg hover:bg-[#EFEBFF] active:bg-[#EFEBFF] disabled:border-[#D9D9D9] disabled:text-[#737373] disabled:cursor-not-allowed flex-shrink-0 transition">
+              <span className="text-sm font-semibold whitespace-nowrap">Preview</span>
+            </button>
+
+            <button onClick={handleLogout} className="flex items-center gap-1 bg-white border border-[#737373] text-[#737373] px-4 py-2 rounded-lg hover:bg-gray-100 active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 transition">
+              <span className="text-sm font-semibold whitespace-nowrap">Logout</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>
