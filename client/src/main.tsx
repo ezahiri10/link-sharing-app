@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3000/trpc',
+      url: import.meta.env.VITE_API_URL || 'http://localhost:3000/trpc',
       fetch(url, options) {
         return fetch(url, {
           ...options,

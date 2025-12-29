@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/trpc': {
-        target: 'http://localhost:3000',
+        target: process.env.VITE_API_URL?.replace('/trpc', '') || 'http://localhost:3000',
         changeOrigin: true,
       },
     },

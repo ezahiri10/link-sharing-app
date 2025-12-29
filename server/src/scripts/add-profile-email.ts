@@ -5,7 +5,6 @@ async function addProfileEmail() {
   try {
     console.log('🔄 Adding profile_email column...');
     
-    // Add profile_email column if it doesn't exist
     await pool.query(`
       ALTER TABLE users 
       ADD COLUMN IF NOT EXISTS profile_email TEXT;

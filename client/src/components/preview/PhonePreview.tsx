@@ -16,8 +16,6 @@ interface PhonePreviewProps {
   };
 }
 
-/* ---------- helpers ---------- */
-
 function clampText(text?: string, max = 30) {
   if (!text) return "";
   return text.length > max ? text.slice(0, max) + "…" : text;
@@ -26,8 +24,6 @@ function clampText(text?: string, max = 30) {
 function getDisplayName(firstName?: string, lastName?: string) {
   return [firstName, lastName].filter(Boolean).join(" ");
 }
-
-/* ---------- component ---------- */
 
 export function PhonePreview({ links, profile }: PhonePreviewProps) {
   const displayName = getDisplayName(profile?.firstName, profile?.lastName);

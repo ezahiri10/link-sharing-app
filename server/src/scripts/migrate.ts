@@ -5,7 +5,6 @@ async function migrate() {
   try {
     console.log('🔄 Dropping existing tables...\n')
     
-    // Drop tables in correct order (respecting foreign keys)
     await pool.query('DROP TABLE IF EXISTS links CASCADE;')
     await pool.query('DROP TABLE IF EXISTS sessions CASCADE;')
     await pool.query('DROP TABLE IF EXISTS users CASCADE;')
@@ -13,7 +12,6 @@ async function migrate() {
 
     console.log('🔄 Creating database tables...\n')
 
-    // Create users table
     await pool.query(`
       CREATE TABLE users (
         id TEXT PRIMARY KEY,
@@ -28,7 +26,6 @@ async function migrate() {
     `);
     console.log('✅ Users table created')
 
-    // Create sessions table
     await pool.query(`
       CREATE TABLE sessions (
         id TEXT PRIMARY KEY,
@@ -38,7 +35,6 @@ async function migrate() {
     `)
     console.log('✅ Sessions table created')
 
-    // Create links table
     await pool.query(`
       CREATE TABLE links (
         id SERIAL PRIMARY KEY,

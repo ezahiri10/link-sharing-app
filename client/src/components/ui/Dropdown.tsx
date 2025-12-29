@@ -30,7 +30,6 @@ export function Dropdown({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -47,7 +46,6 @@ export function Dropdown({
     };
   }, [isOpen]);
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return;
 

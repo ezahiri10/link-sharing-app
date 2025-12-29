@@ -19,7 +19,6 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // Check if user exists
       const existingUser = await ctx.db.query(
         'SELECT id FROM users WHERE email = $1',
         [input.email]
@@ -32,20 +31,16 @@ export const authRouter = router({
         })
       }
 
-      // Hash password
       const passwordHash = await hashPassword(input.password)
       const userId = generateUserId()
 
-      // Create user
       const result = await ctx.db.query(
         'INSERT INTO users (id, email, password_hash, first_name) VALUES ($1, $2, $3, $4) RETURNING id, email, first_name, last_name, image, created_at',
         [userId, input.email, passwordHash, input.name || input.email.split('@')[0]]
       )
 
-      // Create session
       const sessionId = await createSession(userId)
 
-      // Set cookie
       ctx.res.setHeader(
         'Set-Cookie',
         `session_id=${sessionId}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax`
@@ -62,7 +57,6 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // Find user
       const result = await ctx.db.query(
         'SELECT * FROM users WHERE email = $1',
         [input.email]
@@ -77,7 +71,6 @@ export const authRouter = router({
         })
       }
 
-      // Verify password
       const isValid = await comparePassword(input.password, user.password_hash)
 
       if (!isValid) {
@@ -87,10 +80,8 @@ export const authRouter = router({
         })
       }
 
-      // Create session
       const sessionId = await createSession(user.id)
 
-      // Set cookie
       ctx.res.setHeader(
         'Set-Cookie',
         `session_id=${sessionId}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax`
@@ -116,7 +107,6 @@ export const authRouter = router({
       await deleteSession(sessionId)
     }
 
-    // Clear cookie
     ctx.res.setHeader(
       'Set-Cookie',
       'session_id=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax'

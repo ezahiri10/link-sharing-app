@@ -11,7 +11,6 @@ export const userRouter = router({
     return result.rows[0] || null;
   }),
 
-  // PUBLIC ROUTE - for preview page
   getUserById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {

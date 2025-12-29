@@ -32,7 +32,6 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 h-14 sm:h-16 lg:h-20 z-50 bg-white border-b border-[#E2E2E2]">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 h-full">
-        {/* Mobile/Tablet */}
         <div className="flex lg:hidden items-center justify-between gap-1.5 sm:gap-2 h-full">
           <div className="flex items-center gap-1 sm:gap-2 min-w-0 flex-shrink">
             <img src="/assets/images/logo-devlinks-small.svg" alt="devlinks" className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0" />
@@ -71,7 +70,6 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
           </button>
         </div>
 
-        {/* Desktop */}
         <div className="hidden lg:flex items-center justify-between h-full">
           <div className="flex items-center gap-2 min-w-0">
             <img src="/assets/images/logo-devlinks-small.svg" alt="devlinks" className="w-8 h-8 flex-shrink-0" />

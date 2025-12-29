@@ -13,13 +13,11 @@ export function ProfileImageUpload({ imageUrl, onImageChange }: ProfileImageUplo
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file size (max 1MB)
       if (file.size > 1024 * 1024) {
         alert('Image must be below 1024x1024px');
         return;
       }
       
-      // Validate file type
       if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
         alert('Use PNG or JPG format');
         return;
@@ -32,7 +30,7 @@ export function ProfileImageUpload({ imageUrl, onImageChange }: ProfileImageUplo
   return (
     <Card>
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-        <div className="text-xs text-[#333333] sm:w-[240px] flex-shrink-0">
+        <div className="text-xs font-semibold text-gray-400 sm:w-[150px] flex-shrink-0">
           Profile picture
         </div>
         
