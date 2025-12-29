@@ -34,8 +34,8 @@ export const authRouter = router({
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
       await ctx.db.query(
-        'INSERT INTO users (id, email, password_hash, first_name) VALUES ($1, $2, $3, $4)',
-        [userId, email, passwordHash, email.split('@')[0]]
+        'INSERT INTO users (id, email, password_hash) VALUES ($1, $2, $3)',
+        [userId, email, passwordHash]
       );
 
       await ctx.db.query(
