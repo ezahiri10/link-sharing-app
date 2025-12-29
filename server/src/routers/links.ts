@@ -78,4 +78,37 @@ export const linksRouter = router({
 
       return { success: true };
     }),
+
+  reorder: protectedProcedure
+    .input(
+      z.object({
+        links: z.array(
+          z.object({
+            id: z.number(),
+            position: z.number(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const client = await ctx.db.connect();
+      try {
+        await client.query('BEGIN');
+
+        for (const link of input.links) {
+          await client.query(
+            'UPDATE links SET display_order = $1 WHERE id = $2 AND user_id = $3',
+            [link.position, link.id, ctx.user.id]
+          );
+        }
+
+        await client.query('COMMIT');
+        return { success: true };
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally {
+        client.release();
+      }
+    }),
 });

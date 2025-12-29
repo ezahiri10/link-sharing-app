@@ -2,6 +2,3 @@
 > server@1.0.0 dev
 > tsx watch src/index.ts
 
-🚀 Server running at http://localhost:3000
-5:52:23 AM [tsx] change in ./src/auth/better-auth.ts Restarting...
-c🚀 Server running at http://localhost:3000
