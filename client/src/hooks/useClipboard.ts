@@ -10,7 +10,6 @@ export function useClipboard() {
       setTimeout(() => setCopied(false), 3000);
       return true;
     } catch (error) {
-      console.error('Failed to copy:', error);
       return false;
     }
   };

@@ -1,0 +1,1 @@
+{"version":3,"file":"trpc.d.ts","sourceRoot":"","sources":["../src/trpc.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,2BAA2B,EAAE,MAAM,+BAA+B,CAAC;AAGjF,eAAO,MAAM,aAAa,GAAU,cAAc,2BAA2B;;;;;EAqB5E,CAAC;AAMF,eAAO,MAAM,MAAM;;;;;;;;;;EAAW,CAAC;AAC/B,eAAO,MAAM,eAAe;;;;;yLAAc,CAAC;AAE3C,eAAO,MAAM,kBAAkB;;;;;;;;;;yKAW7B,CAAC"}

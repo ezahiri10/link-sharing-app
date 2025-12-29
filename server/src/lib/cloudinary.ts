@@ -1,9 +1,9 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
 export async function uploadToCloudinary(base64Image: string): Promise<string> {
@@ -29,5 +29,5 @@ export async function deleteFromCloudinary(imageUrl: string): Promise<void> {
 
 function extractPublicIdFromUrl(url: string): string | null {
   const match = url.match(/\/v\d+\/(.+)\./);
-  return match ? match[1] : null;
+  return match ? match[1]! : null;
 }

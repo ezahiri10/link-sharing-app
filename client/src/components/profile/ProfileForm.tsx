@@ -24,7 +24,6 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ 
-  user,
   firstName,
   lastName,
   email,

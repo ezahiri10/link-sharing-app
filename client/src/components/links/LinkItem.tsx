@@ -76,21 +76,6 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
     setUrlError("");
   };
 
-  const handleUrlBlur = () => {
-    if (editUrl !== link.url && editUrl.trim()) {
-      handleSave();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSave();
-    } else if (e.key === 'Escape') {
-      handleCancel();
-    }
-  };
-
   return (
     <div className="bg-bg-light rounded-lg p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
