@@ -38,25 +38,19 @@ export default function LoginPage() {
 
     try {
       setIsLoading(true);
-      console.log('🔐 Attempting login...');
       const result = await signIn.email({
         email,
         password,
       });
-      console.log('✅ Login result:', result);
       
       if (result.error) {
-        console.error('Login failed:', result.error);
         setEmailError("Invalid credentials");
         setPasswordError("Invalid credentials");
         return;
       }
       
-      console.log('🔄 Navigating to dashboard...');
       await navigate({ to: "/dashboard/links" });
-      console.log('✅ Navigation complete');
     } catch (error: any) {
-      console.error('❌ Login error:', error);
       setEmailError("Invalid credentials");
       setPasswordError("Invalid credentials");
     } finally {

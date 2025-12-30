@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { db, pool } from "../db/client.js";
+import { db } from "../db/client.js";
 
 export const auth = betterAuth({
   database: {
@@ -15,36 +15,6 @@ export const auth = betterAuth({
   advanced: {
     generateId: () => crypto.randomUUID(),
     useSecureCookies: process.env.NODE_ENV === "production",
-    crossSubDomainCookies: {
-      enabled: false,
-    },
-    hooks: {
-      before: [
-        {
-          matcher: (ctx) => ctx.path?.includes('/sign-in'),
-          handler: async (ctx) => {
-            console.log('🔍 Before sign-in hook');
-            if (ctx.body && 'email' in ctx.body) {
-              const email = ctx.body.email;
-              console.log('📧 Login attempt for:', email);
-              
-              // Debug: manually check account
-              const result = await pool.query(`
-                SELECT a.id, a."userId", a."accountId", a."providerId",
-                       LENGTH(a.password) as password_length,
-                       SUBSTRING(a.password, 1, 20) as password_preview
-                FROM account a
-                JOIN users u ON a."userId" = u.id
-                WHERE u.email = $1 AND a."providerId" = 'credential'
-              `, [email]);
-              
-              console.log('🔍 Manual account check:', result.rows);
-            }
-            return { context: ctx };
-          },
-        },
-      ],
-    },
   },
   user: {
     additionalFields: {
@@ -77,7 +47,6 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     password: {
       hash: async (password: string) => {
-        console.log('🔐 Hashing password');
         const bcrypt = await import('bcrypt');
         return bcrypt.hash(password, 10);
       },
