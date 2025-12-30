@@ -1,3 +1,19 @@
+import { useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { LinkItem } from "./LinkItem";
 
 interface LinksListProps {
@@ -8,11 +24,45 @@ interface LinksListProps {
   }>;
   onUpdate: (id: number, platform: string, url: string) => void;
   onDelete: (id: number) => void;
+  onReorder: (reorderedLinks: Array<{ id: number; position: number }>) => void;
   isUpdating: boolean;
   isDeleting: boolean;
 }
 
-export function LinksList({ links, onUpdate, onDelete, isUpdating, isDeleting }: LinksListProps) {
+export function LinksList({ links, onUpdate, onDelete, onReorder, isUpdating, isDeleting }: LinksListProps) {
+  const [items, setItems] = useState(links);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Update local state when links prop changes
+  if (links !== items && links.length !== items.length) {
+    setItems(links);
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+
+      const newItems = arrayMove(items, oldIndex, newIndex);
+      setItems(newItems);
+
+      // Send reorder request to server
+      const reorderedLinks = newItems.map((item, index) => ({
+        id: item.id,
+        position: index,
+      }));
+      onReorder(reorderedLinks);
+    }
+  };
+
   if (links.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -32,18 +82,22 @@ export function LinksList({ links, onUpdate, onDelete, isUpdating, isDeleting }:
   }
 
   return (
-    <div className="space-y-4">
-      {links.map((link, index) => (
-        <LinkItem
-          key={link.id}
-          link={link}
-          index={index}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
-          isUpdating={isUpdating}
-          isDeleting={isDeleting}
-        />
-      ))}
-    </div>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={items.map((link) => link.id)} strategy={verticalListSortingStrategy}>
+        <div className="space-y-4">
+          {items.map((link, index) => (
+            <LinkItem
+              key={link.id}
+              link={link}
+              index={index}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+              isUpdating={isUpdating}
+              isDeleting={isDeleting}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }

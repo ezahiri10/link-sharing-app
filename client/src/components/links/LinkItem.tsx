@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { getPlatformInfo } from "../../constants/platforms";
 import { Dropdown } from "../ui/Dropdown";
 import { Input } from "../ui/Input";
@@ -39,6 +41,21 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
   const [editUrl, setEditUrl] = useState(link.url);
   const [urlError, setUrlError] = useState("");
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: link.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   const platformInfo = getPlatformInfo(link.platform);
 
   const handleEdit = () => {
@@ -77,12 +94,19 @@ export function LinkItem({ link, index, onUpdate, onDelete, isUpdating, isDeleti
   };
 
   return (
-    <div className="bg-bg-light rounded-lg p-4 sm:p-5">
+    <div ref={setNodeRef} style={style} className="bg-bg-light rounded-lg p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <svg width="12" height="6" viewBox="0 0 12 6" className="text-text-gray">
-            <path fill="currentColor" d="M0 0h12v1H0zM0 5h12v1H0z"/>
-          </svg>
+          <button
+            type="button"
+            className="cursor-grab active:cursor-grabbing touch-none focus:outline-none"
+            {...attributes}
+            {...listeners}
+          >
+            <svg width="12" height="6" viewBox="0 0 12 6" className="text-text-gray">
+              <path fill="currentColor" d="M0 0h12v1H0zM0 5h12v1H0z"/>
+            </svg>
+          </button>
           <span className="text-sm font-semibold text-text-gray">Link #{index + 1}</span>
         </div>
         <button

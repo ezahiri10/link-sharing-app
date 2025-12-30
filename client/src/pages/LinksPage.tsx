@@ -8,7 +8,7 @@ import { LinksList } from "../components/links/LinksList";
 
 export default function LinksPage() {
   const { user } = useAuth();
-  const { links, isLoading, createLink, updateLink, deleteLink } = useLinks();
+  const { links, isLoading, createLink, updateLink, deleteLink, reorderLinks } = useLinks();
   const [showForm, setShowForm] = useState(false);
 
   const handleCreateLink = (platform: string, url: string) => {
@@ -22,6 +22,10 @@ export default function LinksPage() {
 
   const handleDeleteLink = (id: number) => {
     deleteLink.mutate({ id });
+  };
+
+  const handleReorder = (reorderedLinks: Array<{ id: number; position: number }>) => {
+    reorderLinks.mutate({ links: reorderedLinks });
   };
 
   if (!user) return null;
@@ -83,6 +87,7 @@ export default function LinksPage() {
                   links={links}
                   onUpdate={handleUpdateLink}
                   onDelete={handleDeleteLink}
+                  onReorder={handleReorder}
                   isUpdating={updateLink.isPending}
                   isDeleting={deleteLink.isPending}
                 />

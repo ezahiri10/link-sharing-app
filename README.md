@@ -1,113 +1,284 @@
-# Frontend Mentor - Link-sharing app
+# DevLinks - Link Sharing Application
 
-![Design preview for the Link-sharing app coding challenge](./preview.jpg)
+A full-stack web application that allows users to create a personalized profile page with custom links to their social media accounts and professional platforms. Built with modern web technologies and designed for simplicity and performance.
 
-## Welcome! 👋
+## Features
 
-Thanks for purchasing this premium Frontend Mentor coding challenge.
+- **User Authentication**: Secure registration and login system with session management
+- **Link Management**: Create, read, update, and delete custom platform links
+- **Drag & Drop Reordering**: Intuitive drag-and-drop interface to reorder links
+- **Profile Customization**: Upload profile picture, set name, and email
+- **Live Preview**: Real-time mobile preview of your profile while editing
+- **Public Profile Pages**: Share your personalized link page with a unique URL
+- **Responsive Design**: Fully responsive UI optimized for mobile, tablet, and desktop
+- **Form Validation**: Client and server-side validation for all inputs
+- **Image Upload**: Profile picture upload with Cloudinary integration
+- **Platform Support**: 14+ supported platforms including GitHub, LinkedIn, Twitter, YouTube, and more
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects. These premium challenges are perfect portfolio pieces, so please feel free to use what you create in your portfolio to show others.
+## Tech Stack
 
-**To do this challenge, you need a strong understanding of HTML, CSS, and JavaScript.**
+### Frontend
+- **React 19** - UI library
+- **TypeScript** - Type-safe JavaScript
+- **TanStack Router** - Type-safe routing
+- **TanStack Query** - Data fetching and caching
+- **tRPC** - End-to-end typesafe APIs
+- **Tailwind CSS** - Utility-first CSS framework
+- **@dnd-kit** - Drag and drop functionality
+- **Vite** - Fast build tool and dev server
 
-## The challenge
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express** - Web framework
+- **tRPC** - Type-safe API layer
+- **PostgreSQL** - Relational database
+- **Bcrypt** - Password hashing
+- **Cloudinary** - Image hosting and optimization
+- **Zod** - Schema validation
 
-Your challenge is to build out this link-sharing app and get it looking as close to the design as possible.
+## Architecture Overview
 
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
+```
+┌─────────────────────────────────────────────────────────┐
+│                        CLIENT                            │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │   React UI   │→ │ TanStack     │→ │  tRPC Client │  │
+│  │  Components  │  │  Router      │  │              │  │
+│  └──────────────┘  └──────────────┘  └──────┬───────┘  │
+└────────────────────────────────────────────────│──────────┘
+                                                 │
+                                      HTTP (tRPC batching)
+                                                 │
+┌────────────────────────────────────────────────│──────────┐
+│                        SERVER                  │          │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────▼───────┐  │
+│  │  tRPC Router │  │  Middleware  │  │  Express App   │  │
+│  │   (routers)  │→ │   (CORS,     │  │                │  │
+│  └──────┬───────┘  │    Auth)     │  └────────────────┘  │
+│         │          └──────────────┘                       │
+│         ▼                                                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │  PostgreSQL  │  │  Cloudinary  │  │   Sessions   │  │
+│  │   Database   │  │  (Images)    │  │   (Auth)     │  │
+│  └──────────────┘  └──────────────┘  └──────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
 
-Your users should be able to:
+## Environment Variables
 
-- Create, read, update, delete links and see previews in the mobile mockup
-- Receive validations if the links form is submitted without a URL or with the wrong URL pattern for the platform
-- Drag and drop links to reorder them
-- Add profile details like profile picture, first name, last name, and email
-- Receive validations if the profile details form is saved with no first or last name
-- Preview their devlinks profile and copy the link to their clipboard
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
-- **Bonus**: Save details to a database (build the project as a full-stack app)
-- **Bonus**: Create an account and log in (add user authentication to the full-stack app)
+### Client (`client/.env`)
+```env
+VITE_API_URL=http://localhost:3000/trpc
+VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_preset
+```
 
-Want some support on the challenge? [Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+### Server (`server/.env`)
+```env
+PORT=3000
+CLIENT_URL=http://localhost:5173
+DATABASE_URL=postgresql://user:password@localhost:5432/devlinks
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
 
-### Expected behaviour
+## Local Development Setup
 
-- Links
-  - Clicking "Add new link" will add a new repeater where the user can select the platform to add a link for and add the URL.
-  - Adding a new link should immediately show the platform's link inn the mobile mockup illustration even before the form is saved.
-  - When the user clicks "Save", the form should validate for the presence of a URL and ensure the URL pattern is correct for the platform (e.g. "https://www.frontendmentor.io/profile/:username" for the Frontend Mentor link).
-  - The user should be able to drag and drop by clicking and holding the two-line hamburger icon in the top left of each link repeater.
-  - The mobile mockup illustration isn't shown on tablet and mobile layouts. The user would need to click through to the preview page to see their profile. Feel free to play around with this UX if you want to include the mobile mockup illustration for mobile and tablet.
-- Profile Details
-  - First name and last name are the only required fields. If no profile picture or email address are present, remove the necessary parts of the mobile mockup or use the person's initials inside the circle where the profile picture would be.
-  - You can use Web APIs like FileReader to handle the image upload. You can do this completely client-side if you're just building the front-end. If you're building full-stack, this is a nice opportunity to integrate with a media hosting service like Cloudinary and practice using their API. Remember to keep your API credentials secret if you choose this route!
-- Preview
-  - Clicking "Share Link" should copy the current URL to the user's clipboard and show the relevant toast message shown in the design.
-  - If you're building the project as a full-stack app, ensure only the current user can only see the header with the "Back to Editor" and "Share Link" call-to-actions if they are the same user as the one in the profile. If they're not, the header should disappear and they shouldn't be able to access the admin area.
+### Prerequisites
+- Node.js >= 18.x
+- PostgreSQL >= 14.x
+- npm or yarn
 
-## Where to find everything
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/ezahiri10/link-sharing-app.git
+cd link-sharing-app
+```
 
-Your task is to build out the project to the design file provided. We provide both Sketch and Figma versions of the design, so you can choose which tool you prefer to use. You can download the design file on the platform. **Please be sure not to share them with anyone else.** The design download comes with a `README.md` file as well to help you get set up.
+### Step 2: Database Setup
+```bash
+# Create PostgreSQL database
+createdb devlinks
 
-All the required assets for this project are in the `/assets` folder. The images are already exported for the correct screen size and optimized. Some are reusable at multiple screen sizes. So if you don't see an image in a specific folder, it will typically be in another folder for that page.
+# Run the schema
+psql devlinks < server/src/db/schema.sql
+```
 
-We also include variable and static font files for the required fonts for this project. You can choose to either link to Google Fonts or use the local font files to host the fonts yourself. Note that we've removed the static font files for the font weights that aren't needed for this project.
+Or manually create tables:
+```sql
+CREATE TABLE users (
+  id VARCHAR(255) PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  profile_email VARCHAR(255),
+  image TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-The design system in the design file will give you more information about the various colors, fonts, and styles used in this project. Our fonts always come from [Google Fonts](https://fonts.google.com/).
+CREATE TABLE sessions (
+  id VARCHAR(255) PRIMARY KEY,
+  user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-## Building your project
+CREATE TABLE links (
+  id SERIAL PRIMARY KEY,
+  user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE,
+  platform VARCHAR(50) NOT NULL,
+  url TEXT NOT NULL,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+CREATE INDEX idx_sessions_user_id ON sessions(user_id);
+CREATE INDEX idx_sessions_expires_at ON sessions(expires_at);
+CREATE INDEX idx_links_user_id ON links(user_id);
+CREATE INDEX idx_links_display_order ON links(display_order);
+```
 
-1. Separate the `starter-code` from the rest of this project and rename it to something meaningful for you. Initialize the codebase as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/). **⚠️ IMPORTANT ⚠️: There are already a couple of `.gitignore` files in this project. Please do not remove them or change the content of the files. If you create a brand new project, please use the `.gitignore` files provided in your new codebase. This is to avoid the accidental upload of the design files to GitHub. With these premium challenges, please be sure not to share the design files in your GitHub repo. Thanks!**
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+### Step 3: Install Dependencies
+```bash
+# Install client dependencies
+cd client
+npm install
 
-## Deploying your project
+# Install server dependencies
+cd ../server
+npm install
+```
 
-As mentioned above, there are many ways to host your project for free. Our recommend hosts are:
+### Step 4: Configure Environment Variables
+Create `.env` files in both `client/` and `server/` directories with the variables listed above.
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+### Step 5: Run Development Servers
+```bash
+# Terminal 1 - Run server
+cd server
+npm run dev
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://medium.com/frontend-mentor/frontend-mentor-trusted-hosting-providers-bf000dfebe).
+# Terminal 2 - Run client
+cd client
+npm run dev
+```
 
-## Create a custom `README.md`
+The application will be available at:
+- Client: http://localhost:5173
+- Server: http://localhost:3000
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+## Build & Deployment
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+### Client Build
+```bash
+cd client
+npm run build
+```
+Output: `client/dist/`
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+### Server Build
+```bash
+cd server
+npm run build
+```
+Output: `server/dist/`
 
-## Submitting your solution
+### Production Start
+```bash
+cd server
+npm start
+```
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://medium.com/frontend-mentor/a-complete-guide-to-submitting-solutions-on-frontend-mentor-ac6384162248) for tips on how to do this.
+### Deployment Platforms
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+#### Recommended Stack
+- **Frontend**: Vercel, Netlify, or Cloudflare Pages
+- **Backend**: Railway, Render, or Fly.io
+- **Database**: Railway PostgreSQL, Supabase, or Neon
 
-**⚠️ IMPORTANT ⚠️: With these premium challenges, please be sure not to upload the design files to GitHub when you're submitting to the platform and sharing it around. If you've created a brand new project, the easiest way to do that is to copy across the `.gitignore` provided in this starter project.**
+#### Environment Configuration
+Ensure all environment variables are properly set in your deployment platform's dashboard.
 
-## Sharing your solution
+## Project Structure
 
-There are multiple places you can share your solution:
+```
+link-sharing-app/
+├── client/                 # Frontend React application
+│   ├── public/            # Static assets
+│   ├── src/
+│   │   ├── components/    # Reusable UI components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── lib/           # Utilities and configs
+│   │   ├── pages/         # Page components
+│   │   ├── router/        # Route definitions
+│   │   └── constants/     # App constants
+│   └── package.json
+│
+├── server/                # Backend Node.js application
+│   ├── src/
+│   │   ├── routers/       # tRPC route handlers
+│   │   ├── db/            # Database client
+│   │   ├── lib/           # Utilities (Cloudinary, etc.)
+│   │   └── trpc.ts        # tRPC setup
+│   └── package.json
+│
+├── Makefile              # Development commands
+└── README.md             # This file
+```
 
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community). 
-2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on other social channels like LinkedIn.
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+## API Endpoints (tRPC)
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
+### Authentication
+- `auth.register` - Register new user
+- `auth.login` - Login user
+- `auth.logout` - Logout user
 
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
+### User Management
+- `user.me` - Get current user profile
+- `user.getUserById` - Get user by ID (public)
+- `user.updateProfile` - Update user profile
 
-## Got feedback for us?
+### Link Management
+- `links.getAll` - Get all links for current user
+- `links.getByUserId` - Get links by user ID (public)
+- `links.create` - Create new link
+- `links.update` - Update existing link
+- `links.delete` - Delete link
+- `links.reorder` - Reorder links
 
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+## Known Limitations
 
-**Have fun building!** 🚀
+- Image uploads are limited to 1MB
+- Maximum 5 links displayed in mobile preview
+- Session expiry is 7 days
+- No email verification system
+- No password reset functionality
+
+## Future Improvements
+
+- [ ] Email verification system
+- [ ] Password reset via email
+- [ ] Analytics dashboard for link clicks
+- [ ] Custom themes and color schemes
+- [ ] QR code generation for profiles
+- [ ] Social sharing preview optimization
+- [ ] Link click tracking
+- [ ] Custom domain support
+- [ ] Export profile as PDF
+- [ ] Dark mode support
+
+## Author
+
+**Ezahiri**
+- GitHub: [@ezahiri10](https://github.com/ezahiri10)
+- Project Link: [https://github.com/ezahiri10/link-sharing-app](https://github.com/ezahiri10/link-sharing-app)
+
+## License
+
+This project was created as part of a Frontend Mentor challenge. See the original challenge here: [Link-sharing app](https://www.frontendmentor.io/challenges/linksharing-app-Fbt7yweGsT)
+
+---
+
+Built with ❤️ using modern web technologies
