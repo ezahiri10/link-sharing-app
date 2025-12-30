@@ -2,10 +2,10 @@
 
 > A modern full-stack link-in-bio application for developers to showcase their professional presence across multiple platforms.
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19.0-61dafb)](https://react.dev/)
-[![tRPC](https://img.shields.io/badge/tRPC-11.0-2596be)](https://trpc.io/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Latest-336791)](https://www.postgresql.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
+[![tRPC](https://img.shields.io/badge/tRPC-11.0-2596BE?style=flat&logo=trpc&logoColor=white)](https://trpc.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Latest-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 ---
 
