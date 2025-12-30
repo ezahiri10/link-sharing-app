@@ -18,7 +18,7 @@ export const authRouter = router({
           body: {
             email: input.email,
             password: input.password,
-            name: input.name,
+            name: input.name || '',
           },
         });
 

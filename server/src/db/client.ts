@@ -7,7 +7,7 @@ export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-interface Database {
+export interface Database {
   user: any;
   session: any;
   users: any;
