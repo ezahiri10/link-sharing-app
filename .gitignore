@@ -1,23 +1,31 @@
-# Avoid accidental upload of the Sketch and Figma design files
-#####################################################
-## Please do not remove lines 5 and 6 - thanks! 🙂 ##
-#####################################################
-*.sketch
-*.fig
+# Dependencies
+node_modules/
 
-# Avoid accidental XD upload if you convert the design file
-###############################################
-## Please do not remove line 12 - thanks! 🙂 ##
-###############################################
-*.xd
-
-# Avoid your project being littered with annoying .DS_Store files!
-.DS_Store
-.prettierignore]
-.vscode/
+# Environment variables
 .env
 .env.local
-node_modules/
+.env.production
+
+# Build outputs
+dist/
+build/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Design files
+*.sketch
+*.fig
+*.xd
+.prettierignore
 screen/
 To-do
 
