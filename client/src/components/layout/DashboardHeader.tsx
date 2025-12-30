@@ -13,7 +13,6 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showToast, setShowToast] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handlePreview = () => {
     if (userId) {
@@ -23,7 +22,6 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
 
   const handleLogout = async () => {
     try {
-      setIsLoggingOut(true);
       await signOut();
       queryClient.clear();
       setShowToast(true);
@@ -32,7 +30,7 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
         navigate({ to: "/login" });
       }, 1500);
     } catch (error) {
-      setIsLoggingOut(false);
+      console.error('Logout failed:', error);
     }
   };
 

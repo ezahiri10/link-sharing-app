@@ -7,7 +7,7 @@ export function useAuth() {
   const navigate = useNavigate();
   const { data: session, isPending } = useSession();
   
-  const { data: user, isLoading, error } = trpc.user.me.useQuery(undefined, {
+  const { data: user, isLoading } = trpc.user.me.useQuery(undefined, {
     retry: false,
     enabled: !!session?.user,
     refetchOnWindowFocus: false,
