@@ -7,11 +7,9 @@ export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-// Define database schema for Kysely with your actual table names
-// Include views that Better Auth uses
 interface Database {
-  user: any;       // View mapping to users table
-  session: any;    // View mapping to sessions table
+  user: any;
+  session: any;
   users: any;
   sessions: any;
   links: any;
@@ -19,7 +17,6 @@ interface Database {
   verification: any;
 }
 
-// Kysely instance for Better Auth
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
     pool: pool,

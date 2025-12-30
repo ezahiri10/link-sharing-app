@@ -8,7 +8,6 @@ export const dashboardRoute = createRoute({
   path: '/dashboard',
   component: DashboardLayout,
   beforeLoad: async () => {
-    // Better Auth uses cookies, check session via API
     const session = await authClient.getSession();
     if (!session.data) {
       throw redirect({ to: '/login' });

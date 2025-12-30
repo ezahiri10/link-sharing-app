@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Instrument Sans Variable Font (Preferred) */
 @font-face {
   font-family: 'Instrument Sans';
   src: url('/assets/fonts/InstrumentSans-VariableFont_wdth,wght.ttf') format('truetype-variations');
@@ -19,7 +18,6 @@
   font-display: swap;
 }
 
-/* Instrument Sans Static Fonts (Fallback) */
 @font-face {
   font-family: 'Instrument Sans';
   src: url('/assets/fonts/static/InstrumentSans-Regular.ttf') format('truetype');
@@ -44,7 +42,6 @@
   font-display: swap;
 }
 
-/* Base styles */
 @layer base {
   body {
     font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -54,7 +51,6 @@
   }
 }
 
-/* Global animations */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -70,7 +66,6 @@
   animation: fade-in 0.3s ease-out;
 }
 
-/* Loading spinner animation */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -81,18 +76,15 @@
   animation: spin 1s linear infinite;
 }
 
-/* Phone preview positioning */
 #phone-preview-sticky {
   top: 112px !important;
 }
 
-/* Links editor scroll */
 #links-editor-content {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
 
-/* Dashboard main padding */
 #links-page-main {
   padding-top: 88px !important;
 }
@@ -103,7 +95,6 @@
   }
 }
 
-/* Base layout */
 body {
   background-color: #ffffff;
   min-height: 100vh;

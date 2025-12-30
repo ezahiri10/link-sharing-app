@@ -330,3 +330,4 @@ Built with modern web development practices as a full-stack portfolio project.
 ---
 
 **Note:** This is a demonstration project. For production use, consider adding additional security measures, monitoring, and testing infrastructure.
+

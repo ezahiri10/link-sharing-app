@@ -39,7 +39,6 @@ export function LinksList({ links, onUpdate, onDelete, onReorder, isUpdating, is
     })
   );
 
-  // Update items when links prop changes
   if (JSON.stringify(items) !== JSON.stringify(links)) {
     setItems(links);
   }
@@ -54,7 +53,6 @@ export function LinksList({ links, onUpdate, onDelete, onReorder, isUpdating, is
       const newItems = arrayMove(items, oldIndex, newIndex);
       setItems(newItems);
 
-      // Send reorder request with new positions
       const reorderedLinks = newItems.map((item, index) => ({
         id: item.id,
         position: index,
