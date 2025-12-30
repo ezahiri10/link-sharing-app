@@ -6,6 +6,7 @@ export const indexRoute = createRoute({
   path: '/',
   beforeLoad: () => {
     const sessionId = localStorage.getItem('sessionId');
+
     if (sessionId) {
       throw redirect({ to: '/dashboard/links' });
     } else {

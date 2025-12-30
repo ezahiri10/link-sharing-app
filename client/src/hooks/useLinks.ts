@@ -17,11 +17,16 @@ export function useLinks() {
     onSuccess: () => utils.links.getAll.invalidate(),
   });
 
+  const reorderLinks = trpc.links.reorder.useMutation({
+    onSuccess: () => utils.links.getAll.invalidate(),
+  });
+
   return {
     links,
     isLoading,
     createLink,
     updateLink,
     deleteLink,
+    reorderLinks,
   };
 }

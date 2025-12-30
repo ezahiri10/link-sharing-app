@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { trpc } from "../lib/trpc";
+import { signIn } from "../lib/auth";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Input } from "../components/ui/Input";
 
@@ -9,17 +9,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  const login = trpc.auth.login.useMutation({
-    onSuccess: (data) => {
-      localStorage.setItem("sessionId", data.sessionId);
-      navigate({ to: "/dashboard/links" });
-    },
-    onError: (error: any) => {
-      setEmailError("Invalid credentials");
-      setPasswordError("Invalid credentials");
-    },
-  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +36,32 @@ export default function LoginPage() {
 
     if (hasError) return;
 
-    login.mutate({ email, password });
+    try {
+      setIsLoading(true);
+      console.log('🔐 Attempting login...');
+      const result = await signIn.email({
+        email,
+        password,
+      });
+      console.log('✅ Login result:', result);
+      
+      if (result.error) {
+        console.error('Login failed:', result.error);
+        setEmailError("Invalid credentials");
+        setPasswordError("Invalid credentials");
+        return;
+      }
+      
+      console.log('🔄 Navigating to dashboard...');
+      await navigate({ to: "/dashboard/links" });
+      console.log('✅ Navigation complete');
+    } catch (error: any) {
+      console.error('❌ Login error:', error);
+      setEmailError("Invalid credentials");
+      setPasswordError("Invalid credentials");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -104,10 +119,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={login.isPending}
+              disabled={isLoading}
               className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
             >
-              {login.isPending ? "Logging in..." : "Login"}
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
 

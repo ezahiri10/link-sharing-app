@@ -1,113 +1,332 @@
-# Frontend Mentor - Link-sharing app
+# DevLinks - Link Sharing Platform
 
-![Design preview for the Link-sharing app coding challenge](./preview.jpg)
+> A modern full-stack link-in-bio application for developers to showcase their professional presence across multiple platforms.
 
-## Welcome! 👋
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.0-61dafb)](https://react.dev/)
+[![tRPC](https://img.shields.io/badge/tRPC-11.0-2596be)](https://trpc.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Latest-336791)](https://www.postgresql.org/)
 
-Thanks for purchasing this premium Frontend Mentor coding challenge.
+---
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects. These premium challenges are perfect portfolio pieces, so please feel free to use what you create in your portfolio to show others.
+## Overview
 
-**To do this challenge, you need a strong understanding of HTML, CSS, and JavaScript.**
+DevLinks is a production-ready link aggregation platform that allows developers to create a personalized landing page showcasing all their professional links in one place. Built with modern web technologies and best practices for performance, type safety, and developer experience.
 
-## The challenge
+## Features
 
-Your challenge is to build out this link-sharing app and get it looking as close to the design as possible.
+### Core Functionality
+- **User Authentication** - Secure registration and login with Better Auth
+- **Profile Management** - Customizable profile with image upload via Cloudinary
+- **Link Management** - Add, edit, delete, and drag-to-reorder your professional links
+- **Platform Support** - Pre-configured support for 15+ platforms (GitHub, LinkedIn, Twitter, etc.)
+- **Live Preview** - Real-time preview of your public profile
+- **Public Sharing** - Share your unique profile URL with anyone
+- **Responsive Design** - Fully responsive UI that works on all devices
 
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
+### Technical Features
+- **Type-Safe API** - Full type safety across client and server with tRPC
+- **Modern Routing** - File-based routing with TanStack Router
+- **Optimistic Updates** - Instant UI feedback with TanStack Query
+- **Image Optimization** - Cloud-based image storage and delivery
+- **Session Management** - Secure session-based authentication
+- **Database Transactions** - Reliable data integrity with PostgreSQL
 
-Your users should be able to:
+## Tech Stack
 
-- Create, read, update, delete links and see previews in the mobile mockup
-- Receive validations if the links form is submitted without a URL or with the wrong URL pattern for the platform
-- Drag and drop links to reorder them
-- Add profile details like profile picture, first name, last name, and email
-- Receive validations if the profile details form is saved with no first or last name
-- Preview their devlinks profile and copy the link to their clipboard
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
-- **Bonus**: Save details to a database (build the project as a full-stack app)
-- **Bonus**: Create an account and log in (add user authentication to the full-stack app)
+### Frontend
+- **React 19** - Latest React with modern hooks and features
+- **TypeScript** - Full type safety throughout the application
+- **TanStack Router** - Type-safe routing solution
+- **TanStack Query** - Powerful data synchronization
+- **tRPC** - End-to-end type-safe APIs
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vite** - Fast build tool and dev server
 
-Want some support on the challenge? [Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express** - Web application framework
+- **tRPC** - Type-safe API layer
+- **PostgreSQL** - Relational database
+- **Better Auth** - Modern authentication library
+- **Cloudinary** - Image hosting and transformation
+- **Zod** - Schema validation
 
-### Expected behaviour
+## Architecture
 
-- Links
-  - Clicking "Add new link" will add a new repeater where the user can select the platform to add a link for and add the URL.
-  - Adding a new link should immediately show the platform's link inn the mobile mockup illustration even before the form is saved.
-  - When the user clicks "Save", the form should validate for the presence of a URL and ensure the URL pattern is correct for the platform (e.g. "https://www.frontendmentor.io/profile/:username" for the Frontend Mentor link).
-  - The user should be able to drag and drop by clicking and holding the two-line hamburger icon in the top left of each link repeater.
-  - The mobile mockup illustration isn't shown on tablet and mobile layouts. The user would need to click through to the preview page to see their profile. Feel free to play around with this UX if you want to include the mobile mockup illustration for mobile and tablet.
-- Profile Details
-  - First name and last name are the only required fields. If no profile picture or email address are present, remove the necessary parts of the mobile mockup or use the person's initials inside the circle where the profile picture would be.
-  - You can use Web APIs like FileReader to handle the image upload. You can do this completely client-side if you're just building the front-end. If you're building full-stack, this is a nice opportunity to integrate with a media hosting service like Cloudinary and practice using their API. Remember to keep your API credentials secret if you choose this route!
-- Preview
-  - Clicking "Share Link" should copy the current URL to the user's clipboard and show the relevant toast message shown in the design.
-  - If you're building the project as a full-stack app, ensure only the current user can only see the header with the "Back to Editor" and "Share Link" call-to-actions if they are the same user as the one in the profile. If they're not, the header should disappear and they shouldn't be able to access the admin area.
+```
+┌─────────────┐
+│   Client    │
+│  (React +   │
+│   tRPC)     │
+└──────┬──────┘
+       │ HTTP + tRPC
+       │
+┌──────▼──────┐
+│   Server    │
+│  (Express + │
+│   tRPC)     │
+└──────┬──────┘
+       │
+       ├─────┐
+       │     │
+  ┌────▼────┐│
+  │PostgreSQL││
+  │(Neon)   ││
+  └─────────┘│
+  ┌──────────▼──┐
+  │  Cloudinary │
+  │  (Images)   │
+  └─────────────┘
+```
 
-## Where to find everything
+### Project Structure
+```
+├── client/                 # Frontend application
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   │   ├── layout/   # Layout components
+│   │   │   ├── links/    # Link management
+│   │   │   ├── preview/  # Public profile
+│   │   │   ├── profile/  # User profile
+│   │   │   └── ui/       # Reusable UI components
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── pages/        # Page components
+│   │   ├── router/       # Route definitions
+│   │   ├── lib/          # Utilities and configs
+│   │   └── constants/    # Platform definitions
+│   └── public/           # Static assets
+│
+└── server/               # Backend application
+    └── src/
+        ├── routers/     # tRPC routers
+        ├── db/          # Database client
+        └── lib/         # Utilities
+```
 
-Your task is to build out the project to the design file provided. We provide both Sketch and Figma versions of the design, so you can choose which tool you prefer to use. You can download the design file on the platform. **Please be sure not to share them with anyone else.** The design download comes with a `README.md` file as well to help you get set up.
 
-All the required assets for this project are in the `/assets` folder. The images are already exported for the correct screen size and optimized. Some are reusable at multiple screen sizes. So if you don't see an image in a specific folder, it will typically be in another folder for that page.
 
-We also include variable and static font files for the required fonts for this project. You can choose to either link to Google Fonts or use the local font files to host the fonts yourself. Note that we've removed the static font files for the font weights that aren't needed for this project.
+## Quick Start
 
-The design system in the design file will give you more information about the various colors, fonts, and styles used in this project. Our fonts always come from [Google Fonts](https://fonts.google.com/).
+### Prerequisites
+- Node.js 18+ and npm
+- PostgreSQL database
+- Cloudinary account (free tier available)
+- Make (usually pre-installed on Linux/macOS, Windows users can use WSL)
 
-## Building your project
+### 1. Clone and Install
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+```bash
+git clone <repository-url>
+cd link-sharing-app
 
-1. Separate the `starter-code` from the rest of this project and rename it to something meaningful for you. Initialize the codebase as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/). **⚠️ IMPORTANT ⚠️: There are already a couple of `.gitignore` files in this project. Please do not remove them or change the content of the files. If you create a brand new project, please use the `.gitignore` files provided in your new codebase. This is to avoid the accidental upload of the design files to GitHub. With these premium challenges, please be sure not to share the design files in your GitHub repo. Thanks!**
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+# Install all dependencies (client + server)
+make install
+```
 
-## Deploying your project
+### 2. Database Setup
 
-As mentioned above, there are many ways to host your project for free. Our recommend hosts are:
+Create a PostgreSQL database and run the schema:
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+```sql
+-- Create tables
+CREATE TABLE users (
+  id VARCHAR(255) PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  profile_email VARCHAR(255),
+  image TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://medium.com/frontend-mentor/frontend-mentor-trusted-hosting-providers-bf000dfebe).
+CREATE TABLE sessions (
+  id VARCHAR(255) PRIMARY KEY,
+  user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-## Create a custom `README.md`
+CREATE TABLE links (
+  id SERIAL PRIMARY KEY,
+  user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE,
+  platform VARCHAR(255) NOT NULL,
+  url TEXT NOT NULL,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+### 3. Configure Environment Variables
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+Create `.env` files in both `client/` and `server/` directories.
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+**Client (.env):**
+```env
+VITE_API_URL=http://localhost:3000/trpc
+VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
+```
 
-## Submitting your solution
+**Server (.env):**
+```env
+PORT=3000
+CLIENT_URL=http://localhost:5173
+DATABASE_URL=postgresql://user:password@host:5432/database
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://medium.com/frontend-mentor/a-complete-guide-to-submitting-solutions-on-frontend-mentor-ac6384162248) for tips on how to do this.
+**Getting Cloudinary Credentials:**
+1. Sign up at https://cloudinary.com
+2. Create an upload preset in Settings → Upload
+3. Copy your cloud name, API key, and API secret
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+### 4. Start Development
 
-**⚠️ IMPORTANT ⚠️: With these premium challenges, please be sure not to upload the design files to GitHub when you're submitting to the platform and sharing it around. If you've created a brand new project, the easiest way to do that is to copy across the `.gitignore` provided in this starter project.**
+```bash
+# Run both client and server concurrently
+make dev
+```
 
-## Sharing your solution
+The application will be available at:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
 
-There are multiple places you can share your solution:
+## Makefile Commands
 
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community). 
-2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on other social channels like LinkedIn.
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+The project includes a Makefile for simplified development workflow:
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
+```bash
+# View all available commands
+make help
 
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
+# Installation
+make install              # Install all dependencies
+make install-client       # Install client dependencies only
+make install-server       # Install server dependencies only
 
-## Got feedback for us?
+# Development
+make dev                  # Run both servers concurrently
+make dev-client          # Run client only
+make dev-server          # Run server only
 
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+# Production Build
+make build               # Build both client and server
+make build-client        # Build client only
+make build-server        # Build server only
 
-**Have fun building!** 🚀
+# Cleanup
+make clean               # Remove all node_modules and builds
+make clean-client        # Clean client only
+make clean-server        # Clean server only
+```
+
+## Building for Production
+
+### Client Build
+```bash
+cd client
+npm run build
+# Output will be in client/dist/
+```
+
+### Server Build
+```bash
+cd server
+npm run build
+# Output will be in server/dist/
+npm start  # Run production server
+```
+
+## Deployment
+
+### Frontend (Vercel)
+1. Push code to GitHub
+2. Connect repository to Vercel
+3. Set build command: `npm run build`
+4. Set output directory: `dist`
+5. Add environment variables in dashboard
+6. Deploy
+
+### Backend (Railway)
+1. Push code to GitHub
+2. Connect repository to Railway
+3. Add environment variables in dashboard
+4. Railway will auto-detect Node.js and deploy
+5. Note your production URL
+
+### Environment Variables for Production
+- Update `CLIENT_URL` in backend .env to your Vercel URL
+- Update `VITE_API_URL` in frontend .env to your Railway URL
+
+## Supported Platforms
+
+The application supports 15+ platforms including:
+- GitHub
+- Frontend Mentor
+- Twitter
+- LinkedIn
+- YouTube
+- Facebook
+- Twitch
+- Dev.to
+- Codewars
+- CodePen
+- freeCodeCamp
+- GitLab
+- Hashnode
+- Stack Overflow
+- And more...
+
+## API Documentation
+
+### Authentication Endpoints
+- `POST /auth/register` - Create new user account
+- `POST /auth/login` - Login and create session
+- `POST /auth/logout` - Logout and destroy session
+- `GET /auth/me` - Get current user session
+
+### User Endpoints
+- `GET /user/get` - Get user profile
+- `POST /user/updateProfile` - Update user profile
+- `POST /user/uploadImage` - Upload profile image
+
+### Links Endpoints
+- `GET /links/getAll` - Get all user links
+- `POST /links/create` - Create new link
+- `POST /links/update` - Update existing link
+- `POST /links/delete` - Delete link
+
+## Known Limitations
+
+- Maximum 100 links per user
+- Profile images limited to 5MB
+- Session expires after 7 days
+- No email verification (future feature)
+- No password reset (future feature)
+
+## Future Improvements
+
+- [ ] Custom themes and colors
+- [ ] Link click analytics
+- [ ] QR code generation
+- [ ] Email verification
+- [ ] Password reset functionality
+- [ ] Social media preview customization
+- [ ] Export profile as JSON
+- [ ] Migrate to Better Auth for enhanced security features
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Author
+
+Built with modern web development practices as a full-stack portfolio project.
+
+---
+
+**Note:** This is a demonstration project. For production use, consider adding additional security measures, monitoring, and testing infrastructure.

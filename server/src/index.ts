@@ -4,6 +4,8 @@ import cors from 'cors';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { appRouter } from './routers/index.js';
 import { createContext } from './trpc.js';
+import { auth } from './auth/better-auth.js';
+import { toNodeHandler } from 'better-auth/node';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +17,9 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Better Auth API routes
+app.all('/api/auth/*', toNodeHandler(auth));
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

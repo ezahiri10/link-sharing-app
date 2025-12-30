@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { trpc } from '../lib/trpc';
+import { signUp } from '../lib/auth';
 import { useNavigate, Link } from '@tanstack/react-router';
 import { Input } from '../components/ui/Input';
 
@@ -11,20 +11,7 @@ export default function RegisterPage() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  const register = trpc.auth.register.useMutation({
-    onSuccess: (data) => {
-      localStorage.setItem("sessionId", data.sessionId);
-      navigate({ to: "/dashboard/links" });
-    },
-    onError: (error: any) => {
-      if (error.message?.includes("Invalid email") || error.data?.zodError) {
-        setEmailError("Invalid email");
-      } else if (error.message?.includes("Email already registered")) {
-        setEmailError("Email already registered");
-      }
-    },
-  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +50,24 @@ export default function RegisterPage() {
 
     if (hasError) return;
 
-    register.mutate({ email, password });
+    try {
+      setIsLoading(true);
+      await signUp.email({
+        email,
+        password,
+        name: email.split('@')[0],
+      });
+      
+      navigate({ to: "/dashboard/links" });
+    } catch (error: any) {
+      if (error.message?.includes('already exists') || error.message?.includes('duplicate')) {
+        setEmailError("Email already registered");
+      } else {
+        setEmailError("Registration failed");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -132,10 +136,10 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={register.isPending}
+            disabled={isLoading}
             className="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:shadow-[2px_2px_10px_3px_#BEADFF]"
           >
-            {register.isPending ? 'Creating account…' : 'Create new account'}
+            {isLoading ? 'Creating account…' : 'Create new account'}
           </button>
         </form>
 

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { trpc } from "../../lib/trpc";
+import { signOut } from "../../lib/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toast } from "../ui/Toast";
@@ -12,8 +12,8 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const logoutMutation = trpc.auth.logout.useMutation();
   const [showToast, setShowToast] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handlePreview = () => {
     if (userId) {
@@ -23,15 +23,16 @@ export function DashboardHeader({ userId, activeTab }: DashboardHeaderProps) {
 
   const handleLogout = async () => {
     try {
-      await logoutMutation.mutateAsync();
+      setIsLoggingOut(true);
+      await signOut();
       queryClient.clear();
-      localStorage.removeItem('sessionId');
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
         navigate({ to: "/login" });
       }, 1500);
     } catch (error) {
+      setIsLoggingOut(false);
     }
   };
 
