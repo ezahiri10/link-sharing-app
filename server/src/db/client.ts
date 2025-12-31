@@ -11,7 +11,6 @@ export interface Database {
   user: any;
   session: any;
   users: any;
-  sessions: any;
   links: any;
   account: any;
   verification: any;

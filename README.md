@@ -7,16 +7,19 @@
 [![tRPC](https://img.shields.io/badge/tRPC-11.0-2596BE?style=flat&logo=trpc&logoColor=white)](https://trpc.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Latest-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
+**Live Demo:** [https://fronend-link-app.vercel.app](https://fronend-link-app.vercel.app)
+
 ---
 
 ## Overview
 
-DevLinks is a production-ready link aggregation platform that allows developers to create a personalized landing page showcasing all their professional links in one place. Built with modern web technologies and best practices for performance, type safety, and developer experience.
+DevLinks is a production-ready link aggregation platform that allows developers to create a personalized landing page showcasing all their professional links in one place. Built with modern web technologies and deployed on Vercel (frontend) and Railway (backend) with cross-origin authentication.
 
 ## Features
 
 ### Core Functionality
 - **User Authentication** - Secure registration and login with Better Auth
+- **Cross-Origin Sessions** - Working cookie-based authentication across domains
 - **Profile Management** - Customizable profile with image upload via Cloudinary
 - **Link Management** - Add, edit, delete, and drag-to-reorder your professional links
 - **Platform Support** - Pre-configured support for 15+ platforms (GitHub, LinkedIn, Twitter, etc.)
@@ -29,7 +32,8 @@ DevLinks is a production-ready link aggregation platform that allows developers 
 - **Modern Routing** - File-based routing with TanStack Router
 - **Optimistic Updates** - Instant UI feedback with TanStack Query
 - **Image Optimization** - Cloud-based image storage and delivery
-- **Session Management** - Secure session-based authentication
+- **Session Management** - Better Auth with database session storage
+- **Cross-Origin Cookies** - Custom middleware for SameSite=None cookies
 - **Database Transactions** - Reliable data integrity with PostgreSQL
 
 ## Tech Stack
@@ -40,79 +44,75 @@ DevLinks is a production-ready link aggregation platform that allows developers 
 - **TanStack Router** - Type-safe routing solution
 - **TanStack Query** - Powerful data synchronization
 - **tRPC** - End-to-end type-safe APIs
+- **Better Auth React** - Authentication client
 - **Tailwind CSS** - Utility-first CSS framework
 - **Vite** - Fast build tool and dev server
+- **Deployed on Vercel**
 
 ### Backend
 - **Node.js** - JavaScript runtime
 - **Express** - Web application framework
 - **tRPC** - Type-safe API layer
-- **PostgreSQL** - Relational database
+- **PostgreSQL (Neon)** - Serverless PostgreSQL database
 - **Better Auth** - Modern authentication library
+- **Kysely** - Type-safe SQL query builder
 - **Cloudinary** - Image hosting and transformation
-- **Zod** - Schema validation
+- **Deployed on Railway**
 
 ## Architecture
 
 ```
-┌─────────────┐
-│   Client    │
-│  (React +   │
-│   tRPC)     │
-└──────┬──────┘
-       │ HTTP + tRPC
-       │
-┌──────▼──────┐
-│   Server    │
-│  (Express + │
-│   tRPC)     │
-└──────┬──────┘
-       │
-       ├─────┐
-       │     │
-  ┌────▼────┐│
-  │PostgreSQL││
-  │(Neon)   ││
-  └─────────┘│
-  ┌──────────▼──┐
-  │  Cloudinary │
-  │  (Images)   │
-  └─────────────┘
+┌──────────────────┐
+│   Vercel         │
+│   (Frontend)     │
+│   React + tRPC   │
+└────────┬─────────┘
+         │ HTTPS + Cookies
+         │ (SameSite=None)
+         │
+┌────────▼─────────┐
+│   Railway        │
+│   (Backend)      │
+│   Express + tRPC │
+└────────┬─────────┘
+         │
+         ├──────────┐
+         │          │
+    ┌────▼────┐ ┌──▼────────┐
+    │ Neon DB │ │Cloudinary │
+    │(Session)│ │ (Images)  │
+    └─────────┘ └───────────┘
 ```
 
-### Project Structure
+## Project Structure
 ```
-├── client/                 # Frontend application
+├── client/                 # Frontend application (Vercel)
 │   ├── src/
 │   │   ├── components/    # React components
-│   │   │   ├── layout/   # Layout components
-│   │   │   ├── links/    # Link management
-│   │   │   ├── preview/  # Public profile
-│   │   │   ├── profile/  # User profile
-│   │   │   └── ui/       # Reusable UI components
 │   │   ├── hooks/        # Custom React hooks
 │   │   ├── pages/        # Page components
 │   │   ├── router/       # Route definitions
-│   │   ├── lib/          # Utilities and configs
+│   │   ├── lib/          
+│   │   │   ├── auth.ts   # Better Auth client
+│   │   │   └── trpc.ts   # tRPC client
 │   │   └── constants/    # Platform definitions
 │   └── public/           # Static assets
 │
-└── server/               # Backend application
+└── server/               # Backend application (Railway)
     └── src/
-        ├── routers/     # tRPC routers
-        ├── db/          # Database client
-        └── lib/         # Utilities
+        ├── auth/
+        │   └── better-auth.ts  # Auth configuration
+        ├── routers/           # tRPC routers
+        ├── db/               # Database client
+        └── index.ts          # Express server with CORS
 ```
-
-
 
 ## Quick Start
 
 ### Prerequisites
 - Node.js 18+ and npm
-- PostgreSQL database
+- PostgreSQL database (Neon recommended)
 - Cloudinary account (free tier available)
-- Make (usually pre-installed on Linux/macOS, Windows users can use WSL)
 
 ### 1. Clone and Install
 
@@ -120,20 +120,22 @@ DevLinks is a production-ready link aggregation platform that allows developers 
 git clone <repository-url>
 cd link-sharing-app
 
-# Install all dependencies (client + server)
-make install
+# Install client dependencies
+cd client && npm install
+
+# Install server dependencies
+cd ../server && npm install
 ```
 
 ### 2. Database Setup
 
-Create a PostgreSQL database and run the schema:
+Better Auth automatically creates required tables (`session`, `account`, `verification`). You only need to create the `users` and `links` tables:
 
 ```sql
--- Create tables
-CREATE TABLE users (
+-- Users table (for custom user data)
+CREATE TABLE IF NOT EXISTS users (
   id VARCHAR(255) PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
   first_name VARCHAR(255),
   last_name VARCHAR(255),
   profile_email VARCHAR(255),
@@ -141,26 +143,23 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE sessions (
-  id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE,
-  expires_at TIMESTAMP NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE links (
+-- Links table
+CREATE TABLE IF NOT EXISTS links (
   id SERIAL PRIMARY KEY,
   user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE,
-  platform VARCHAR(255) NOT NULL,
+  platform VARCHAR(50) NOT NULL,
   url TEXT NOT NULL,
   display_order INTEGER DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_links_user_id ON links(user_id);
+CREATE INDEX IF NOT EXISTS idx_links_display_order ON links(display_order);
 ```
 
-### 3. Configure Environment Variables
+**Note:** Better Auth will automatically create its own `session`, `account`, and `verification` tables when the server starts.
 
-Create `.env` files in both `client/` and `server/` directories.
+### 3. Configure Environment Variables
 
 **Client (.env):**
 ```env
@@ -172,8 +171,11 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 **Server (.env):**
 ```env
 PORT=3000
+NODE_ENV=development
 CLIENT_URL=http://localhost:5173
+BASE_URL=http://localhost:3000
 DATABASE_URL=postgresql://user:password@host:5432/database
+AUTH_SECRET=your-super-secret-key-change-in-production-min-32-chars-long
 CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
@@ -187,80 +189,67 @@ CLOUDINARY_API_SECRET=your_api_secret
 ### 4. Start Development
 
 ```bash
-# Run both client and server concurrently
-make dev
+# Terminal 1 - Start backend
+cd server
+npm run dev
+
+# Terminal 2 - Start frontend
+cd client
+npm run dev
 ```
 
 The application will be available at:
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 
-## Makefile Commands
+## Production Deployment
 
-The project includes a Makefile for simplified development workflow:
+### Deployed Services
+- **Frontend**: Vercel - https://fronend-link-app.vercel.app
+- **Backend**: Railway - https://backend-link-app-production.up.railway.app
+- **Database**: Neon (PostgreSQL)
+- **Images**: Cloudinary
 
-```bash
-# View all available commands
-make help
+### Deploy Your Own
 
-# Installation
-make install              # Install all dependencies
-make install-client       # Install client dependencies only
-make install-server       # Install server dependencies only
-
-# Development
-make dev                  # Run both servers concurrently
-make dev-client          # Run client only
-make dev-server          # Run server only
-
-# Production Build
-make build               # Build both client and server
-make build-client        # Build client only
-make build-server        # Build server only
-
-# Cleanup
-make clean               # Remove all node_modules and builds
-make clean-client        # Clean client only
-make clean-server        # Clean server only
-```
-
-## Building for Production
-
-### Client Build
-```bash
-cd client
-npm run build
-# Output will be in client/dist/
-```
-
-### Server Build
-```bash
-cd server
-npm run build
-# Output will be in server/dist/
-npm start  # Run production server
-```
-
-## Deployment
-
-### Frontend (Vercel)
+#### Frontend (Vercel)
 1. Push code to GitHub
-2. Connect repository to Vercel
+2. Import repository in Vercel
 3. Set build command: `npm run build`
 4. Set output directory: `dist`
-5. Add environment variables in dashboard
-6. Deploy
+5. Set root directory: `client`
+6. Add environment variables:
+   ```
+   VITE_API_URL=https://your-backend.railway.app/trpc
+   VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+   VITE_CLOUDINARY_UPLOAD_PRESET=your_preset
+   ```
 
-### Backend (Railway)
+#### Backend (Railway)
 1. Push code to GitHub
-2. Connect repository to Railway
-3. Add environment variables in dashboard
-4. Railway will auto-detect Node.js and deploy
-5. Note your production URL
+2. Import repository in Railway
+3. Set root directory: `server`
+4. Add environment variables:
+   ```
+   NODE_ENV=production
+   PORT=3000
+   CLIENT_URL=https://your-frontend.vercel.app
+   BASE_URL=https://your-backend.railway.app
+   DATABASE_URL=your_neon_connection_string
+   AUTH_SECRET=your-super-secret-key-min-32-chars
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+5. Railway will auto-deploy on push
 
-### Environment Variables for Production
-- Update `CLIENT_URL` in backend .env to your Vercel URL
-- Update `VITE_API_URL` in frontend .env to your Railway URL
+### Important: Cross-Origin Authentication
+
+The application implements custom middleware to handle cross-origin cookies:
+- Backend automatically sets `SameSite=None; Secure` on all cookies
+- CORS configured with `credentials: true`
+- Frontend sends requests with `credentials: 'include'`
+- Works across different domains (Vercel ↔ Railway)
 
 ## Supported Platforms
 
@@ -283,30 +272,72 @@ The application supports 15+ platforms including:
 
 ## API Documentation
 
-### Authentication Endpoints
-- `POST /auth/register` - Create new user account
-- `POST /auth/login` - Login and create session
-- `POST /auth/logout` - Logout and destroy session
-- `GET /auth/me` - Get current user session
+### Authentication (Better Auth)
+- `POST /api/auth/sign-up/email` - Create account
+- `POST /api/auth/sign-in/email` - Login
+- `POST /api/auth/sign-out` - Logout
+- `GET /api/auth/session` - Get current session
 
-### User Endpoints
-- `GET /user/get` - Get user profile
-- `POST /user/updateProfile` - Update user profile
-- `POST /user/uploadImage` - Upload profile image
+### User Management (tRPC)
+- `user.me` - Get current user profile
+- `user.updateProfile` - Update profile info
+- `user.uploadImage` - Upload profile picture
 
-### Links Endpoints
-- `GET /links/getAll` - Get all user links
-- `POST /links/create` - Create new link
-- `POST /links/update` - Update existing link
-- `POST /links/delete` - Delete link
+### Links Management (tRPC)
+- `links.getAll` - Get all user links
+- `links.create` - Create new link
+- `links.update` - Update existing link
+- `links.delete` - Delete link
+- `links.reorder` - Reorder links
+
+## Key Implementation Details
+
+### Cross-Origin Cookie Middleware
+
+The backend includes custom middleware to force `SameSite=None` on all cookies:
+
+```typescript
+app.use((req, res, next) => {
+  const originalSetHeader = res.setHeader;
+  res.setHeader = function(name: string, value: any) {
+    if (name.toLowerCase() === 'set-cookie') {
+      const cookies = Array.isArray(value) ? value : [value];
+      const modifiedCookies = cookies.map((cookie: string) => {
+        let modified = cookie.replace(/SameSite=Lax/gi, 'SameSite=None');
+        if (!modified.includes('Secure')) {
+          modified += '; Secure';
+        }
+        return modified;
+      });
+      return originalSetHeader.call(this, name, modifiedCookies);
+    }
+    return originalSetHeader.call(this, name, value);
+  };
+  next();
+});
+```
+
+### Better Auth Configuration
+
+```typescript
+export const auth = betterAuth({
+  database: {
+    provider: "postgres",
+    db: db,
+    type: "postgres",
+  },
+  baseURL: "https://backend-link-app-production.up.railway.app",
+  trustedOrigins: ["https://fronend-link-app.vercel.app"],
+  // ... additional config
+});
+```
 
 ## Known Limitations
 
 - Maximum 100 links per user
 - Profile images limited to 5MB
-- Session expires after 7 days
-- No email verification (future feature)
-- No password reset (future feature)
+- Session expires after 7 days of inactivity
+- Better Auth tables created automatically (no manual schema needed)
 
 ## Future Improvements
 
@@ -317,7 +348,7 @@ The application supports 15+ platforms including:
 - [ ] Password reset functionality
 - [ ] Social media preview customization
 - [ ] Export profile as JSON
-- [ ] Migrate to Better Auth for enhanced security features
+- [ ] Two-factor authentication
 
 ## License
 
@@ -325,9 +356,13 @@ This project is open source and available under the MIT License.
 
 ## Author
 
-Built with modern web development practices as a full-stack portfolio project.
+Built as a modern full-stack portfolio project demonstrating:
+- Cross-origin authentication
+- Type-safe API development
+- Modern React patterns
+- Production deployment strategies
 
 ---
 
-**Note:** This is a demonstration project. For production use, consider adding additional security measures, monitoring, and testing infrastructure.
+**Note:** This is a production-deployed application. The live demo is available at [https://fronend-link-app.vercel.app](https://fronend-link-app.vercel.app)
 

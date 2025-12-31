@@ -7,10 +7,6 @@ import { RouterProvider } from '@tanstack/react-router';
 import { router } from './router';
 import './index.css';
 
-function getSessionId() {
-  return localStorage.getItem('sessionId') || undefined;
-}
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -29,12 +25,6 @@ const trpcClient = trpc.createClient({
           ...options,
           credentials: 'include',
         });
-      },
-      headers() {
-        const sessionId = getSessionId();
-        return {
-          authorization: sessionId ? `Bearer ${sessionId}` : '',
-        };
       },
     }),
   ],
